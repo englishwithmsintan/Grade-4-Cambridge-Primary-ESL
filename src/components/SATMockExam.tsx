@@ -9,7 +9,7 @@ import {
 import { SATQuestion } from '../types';
 import { sound } from './SoundManager';
 import { humanVoice, isAbortError } from '../utils/humanVoice';
-import { Award, Clock, ChevronRight, ChevronLeft, Volume2, Play, Pause, RotateCcw, Eye, EyeOff, Home, CheckCircle2, FileText, Printer, Check, Sparkles, HelpCircle, Lightbulb, Copy, RefreshCw } from 'lucide-react';
+import { Award, Clock, ChevronRight, ChevronLeft, Volume2, Play, Pause, RotateCcw, Eye, EyeOff, Home, CheckCircle2, FileText, Printer, Check, Sparkles, HelpCircle, Lightbulb, Copy, RefreshCw, ListOrdered, Compass } from 'lucide-react';
 
 const SIMPLE_MODEL_ESSAY =
   'My dream home is a cosy eco-house on a green hill. ' +
@@ -75,6 +75,10 @@ export default function SATMockExam({
   const [isSpeakingQuestion, setIsSpeakingQuestion] = useState(false);
   const [playingPassage, setPlayingPassage] = useState<'ecohouse' | 'colosseum' | null>(null);
 
+  // Number toggler & quick navigator states
+  const [navPartFilter, setNavPartFilter] = useState<'all' | 1 | 2 | 3 | 4 | 5>('all');
+  const [isNavGridExpanded, setIsNavGridExpanded] = useState(true);
+
   const speakModelEssay = () => {
     if (isSpeakingModel) {
       humanVoice.stop();
@@ -124,7 +128,7 @@ export default function SATMockExam({
       setIsSpeakingQuestion(false);
       return;
     }
-    const q = MOCK_SAT_QUESTIONS[currentQuestionIndex];
+    const q = activeQuestions[currentQuestionIndex];
     if (!q) return;
 
     let textToSpeak = q.question;
@@ -366,12 +370,41 @@ export default function SATMockExam({
     }
   };
 
+  const isQuestionAnswered = (qNum: number, part: number) => {
+    if (part === 5) {
+      return (essayText || '').trim().split(/\s+/).filter(w => w.length > 0).length >= 10;
+    }
+    if (part === 2) {
+      return Boolean(textAnswers[qNum] || selectedAnswers[qNum]);
+    }
+    return selectedAnswers[qNum] !== undefined || Boolean(textAnswers[qNum]);
+  };
+
+  const jumpToQuestion = (targetIndex: number) => {
+    if (targetIndex < 0 || targetIndex >= totalQuestions) return;
+    sound.playClick();
+    setCurrentQuestionIndex(targetIndex);
+    if (examMode === 'practice') {
+      const targetQ = activeQuestions[targetIndex];
+      const hasAns = targetQ ? isQuestionAnswered(targetQ.number, targetQ.part) : false;
+      setSubmitted(hasAns);
+    }
+  };
+
+  const getPartStartIndex = (partNum: number) => {
+    const idx = activeQuestions.findIndex(q => q.part === partNum);
+    return idx !== -1 ? idx : 0;
+  };
+
+  const answeredCount = activeQuestions.filter(q => isQuestionAnswered(q.number, q.part)).length;
+
   const handlePrev = () => {
     sound.playClick();
     if (currentQuestionIndex > 0) {
       setCurrentQuestionIndex(prev => prev - 1);
       if (examMode === 'practice') {
-        setSubmitted(true);
+        const prevQ = activeQuestions[currentQuestionIndex - 1];
+        setSubmitted(prevQ ? isQuestionAnswered(prevQ.number, prevQ.part) : true);
       }
     }
   };
@@ -497,7 +530,7 @@ export default function SATMockExam({
             Summative Assessment Mock Test 📝
           </h2>
           <p className="text-sm md:text-base text-slate-700 mt-3 leading-relaxed font-bold max-w-2xl mx-auto">
-            50-mark mock practice test paper: <strong>Part 1 Listening (5m)</strong>, <strong>Part 2 Vocabulary Anagrams (10m)</strong>, <strong>Part 3 Grammar & Infinitives of Purpose / Modals (10m)</strong>, <strong>Part 4 Reading Comprehension - The Colosseum (10m)</strong>, and <strong>Part 5 Writing Task - My Dream Home (15m)</strong>.
+            50-mark mock practice test paper: <strong>Part 1 Listening (5m)</strong>, <strong>Part 2 Vocabulary Adjectives Matching (10m)</strong>, <strong>Part 3 Grammar & Infinitives of Purpose / Modals (10m)</strong>, <strong>Part 4 Reading Comprehension - The Colosseum (10m)</strong>, and <strong>Part 5 Writing Task - My Dream Home (15m)</strong>.
           </p>
 
           {/* Exam Form Selection (Set A vs Set B) */}
@@ -508,16 +541,16 @@ export default function SATMockExam({
                 {paperSet === 'B' ? (
                   <>
                     <Sparkles className="h-4 w-4 text-amber-500 fill-amber-300 shrink-0" />
-                    <span>Set B · New Alternate Question Bank (Active)</span>
+                    <span>Set B · Shuffled Numbers Form (Active)</span>
                   </>
                 ) : (
-                  <span>Set A · Original Standard Exam Bank (Active)</span>
+                  <span>Set A · Original Test Order (Active)</span>
                 )}
               </span>
               <p className="text-[11px] font-bold text-slate-600 mt-0.5">
                 {paperSet === 'B'
-                  ? 'Contains fresh questions for all 5 sections while preserving identical Cambridge test format & 50-mark weighting.'
-                  : 'Standard curriculum exam questions for Unit 3 Summative Assessment.'}
+                  ? 'Same original test questions from ESL PS, with question numbers shuffled to test real mastery!'
+                  : 'Original question sequence (#1–33) as printed in the ESL PS exam paper.'}
               </p>
             </div>
 
@@ -538,7 +571,7 @@ export default function SATMockExam({
                 }`}
               >
                 <Sparkles className="h-3.5 w-3.5 text-[#560e51]" />
-                Set B (New Questions)
+                Set B (Shuffled Order)
               </button>
 
               <button
@@ -556,7 +589,7 @@ export default function SATMockExam({
                     : 'bg-white hover:bg-fuchsia-50 text-slate-700'
                 }`}
               >
-                Set A (Standard)
+                Set A (Original #1–33)
               </button>
             </div>
           </div>
@@ -668,8 +701,36 @@ export default function SATMockExam({
             </div>
           </div>
 
+          {/* Quick Section Navigator in Paper Mode */}
+          <div className="bg-[#fdf2fe] border-3 border-[#560e51] p-3.5 rounded-2xl flex items-center justify-between flex-wrap gap-2.5 shadow-[2px_2px_0px_0px_#560e51]">
+            <span className="text-xs font-mono font-black text-[#560e51] flex items-center gap-1.5">
+              <Compass className="h-4 w-4 text-[#9b2c98]" /> Quick Jump to Paper Part:
+            </span>
+            <div className="flex flex-wrap gap-1.5">
+              {[
+                { id: 'paper-part-1', label: 'Part 1: Listening (Q1–5)' },
+                { id: 'paper-part-2', label: 'Part 2: Vocab (Q6–15)' },
+                { id: 'paper-part-3', label: 'Part 3: Grammar (Q16–25)' },
+                { id: 'paper-part-4', label: 'Part 4: Reading (Q26–32)' },
+                { id: 'paper-part-5', label: 'Part 5: Writing (Q33)' },
+              ].map(sec => (
+                <button
+                  key={sec.id}
+                  type="button"
+                  onClick={() => {
+                    sound.playClick();
+                    document.getElementById(sec.id)?.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                  className="px-2.5 py-1 bg-white hover:bg-yellow-100 border-2 border-[#560e51] text-[#560e51] text-xs font-mono font-black rounded-lg cursor-pointer transition shadow-[1px_1px_0px_0px_#560e51]"
+                >
+                  {sec.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
           {/* PART 1: LISTENING */}
-          <section className="space-y-4">
+          <section id="paper-part-1" className="space-y-4">
             <div className="flex items-center justify-between flex-wrap gap-2">
               <h3 className="text-xl font-black text-[#560e51] uppercase tracking-tight flex items-center gap-2">
                 <span className="w-8 h-8 rounded-xl bg-[#9b2c98] text-white flex items-center justify-center text-sm font-mono">1</span>
@@ -794,7 +855,7 @@ export default function SATMockExam({
           </section>
 
           {/* PART 2: VOCABULARY & ADJECTIVES MATCHING */}
-          <section className="space-y-4 border-t-2 border-slate-200 pt-6">
+          <section id="paper-part-2" className="space-y-4 border-t-2 border-slate-200 pt-6">
             <div className="flex items-center justify-between flex-wrap gap-2">
               <h3 className="text-xl font-black text-[#560e51] uppercase tracking-tight flex items-center gap-2">
                 <span className="w-8 h-8 rounded-xl bg-[#9b2c98] text-white flex items-center justify-center text-sm font-mono">2</span>
@@ -885,7 +946,7 @@ export default function SATMockExam({
           </section>
 
           {/* PART 3: GRAMMAR */}
-          <section className="space-y-4 border-t-2 border-slate-200 pt-6">
+          <section id="paper-part-3" className="space-y-4 border-t-2 border-slate-200 pt-6">
             <div className="flex items-center justify-between flex-wrap gap-2">
               <h3 className="text-xl font-black text-[#560e51] uppercase tracking-tight flex items-center gap-2">
                 <span className="w-8 h-8 rounded-xl bg-[#9b2c98] text-white flex items-center justify-center text-sm font-mono">3</span>
@@ -929,7 +990,7 @@ export default function SATMockExam({
           </section>
 
           {/* PART 4: READING COMPREHENSION */}
-          <section className="space-y-4 border-t-2 border-slate-200 pt-6">
+          <section id="paper-part-4" className="space-y-4 border-t-2 border-slate-200 pt-6">
             <div className="flex items-center justify-between flex-wrap gap-2">
               <h3 className="text-xl font-black text-[#560e51] uppercase tracking-tight flex items-center gap-2">
                 <span className="w-8 h-8 rounded-xl bg-[#9b2c98] text-white flex items-center justify-center text-sm font-mono">4</span>
@@ -975,7 +1036,7 @@ export default function SATMockExam({
           </section>
 
           {/* PART 5: WRITING */}
-          <section className="space-y-4 border-t-2 border-slate-200 pt-6">
+          <section id="paper-part-5" className="space-y-4 border-t-2 border-slate-200 pt-6">
             <div className="flex items-center justify-between flex-wrap gap-2">
               <h3 className="text-xl font-black text-[#560e51] uppercase tracking-tight flex items-center gap-2">
                 <span className="w-8 h-8 rounded-xl bg-[#9b2c98] text-white flex items-center justify-center text-sm font-mono">5</span>
@@ -1076,7 +1137,156 @@ export default function SATMockExam({
 
       {/* Main Practice / Exam Area */}
       {examMode !== null && examMode !== 'paper' && !examFinished && (
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 animate-fade-in">
+        <div className="space-y-5 animate-fade-in">
+          {/* NUMBER TOGGLER / QUESTION NAVIGATOR */}
+          <div className="bg-white border-4 border-[#560e51] shadow-[6px_6px_0px_0px_#560e51] rounded-[24px] p-4 sm:p-5">
+            {/* Top Bar: Title, Progress, Quick Tabs & Prev/Next Stepper */}
+            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 pb-3 border-b-2 border-fuchsia-100">
+              <div className="flex items-center gap-2.5 flex-wrap">
+                <div className="flex items-center gap-1.5 px-3 py-1.5 bg-[#fdf2fe] border-2 border-[#560e51] rounded-xl text-xs font-black text-[#560e51] shadow-[2px_2px_0px_0px_#560e51]">
+                  <ListOrdered className="h-4 w-4 text-[#9b2c98]" />
+                  <span>Number Toggler (1–{totalQuestions})</span>
+                </div>
+
+                <div className="flex items-center gap-2 bg-[#fefaf0] border-2 border-[#560e51] px-3 py-1 rounded-xl text-xs font-mono font-bold text-slate-800 shadow-[1.5px_1.5px_0px_0px_#560e51]">
+                  <span>Answered:</span>
+                  <span className="font-black text-[#43780a]">{answeredCount} / {totalQuestions}</span>
+                  <div className="w-16 sm:w-20 bg-slate-200 h-2 rounded-full overflow-hidden">
+                    <div 
+                      className="bg-[#78c222] h-full transition-all duration-300"
+                      style={{ width: `${Math.round((answeredCount / totalQuestions) * 100)}%` }}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Fast Part Filter Tabs & Stepper Controls */}
+              <div className="flex items-center gap-2 flex-wrap">
+                <div className="flex items-center gap-1 p-1 bg-slate-100 border border-slate-300 rounded-xl overflow-x-auto">
+                  {[
+                    { label: 'All (33)', part: 'all' as const },
+                    { label: 'P1: Listening', part: 1 as const },
+                    { label: 'P2: Vocab', part: 2 as const },
+                    { label: 'P3: Grammar', part: 3 as const },
+                    { label: 'P4: Reading', part: 4 as const },
+                    { label: 'P5: Essay', part: 5 as const },
+                  ].map(tab => (
+                    <button
+                      key={tab.label}
+                      type="button"
+                      onClick={() => {
+                        sound.playClick();
+                        setNavPartFilter(tab.part);
+                        if (tab.part !== 'all') {
+                          jumpToQuestion(getPartStartIndex(tab.part));
+                        }
+                      }}
+                      className={`px-2.5 py-1 text-[11px] font-black rounded-lg transition uppercase font-mono cursor-pointer ${
+                        navPartFilter === tab.part
+                          ? 'bg-[#560e51] text-white shadow-sm'
+                          : 'text-slate-600 hover:bg-white'
+                      }`}
+                    >
+                      {tab.label}
+                    </button>
+                  ))}
+                </div>
+
+                {/* Direct Dropdown Jumper */}
+                <select
+                  value={currentQuestionIndex}
+                  onChange={(e) => jumpToQuestion(Number(e.target.value))}
+                  className="text-xs font-mono font-bold border-2 border-[#560e51] bg-[#fdf2fe] text-[#560e51] rounded-xl py-1.5 px-2.5 cursor-pointer shadow-[2px_2px_0px_0px_#560e51]"
+                  aria-label="Jump directly to question"
+                >
+                  {activeQuestions.map((q, idx) => {
+                    const ans = isQuestionAnswered(q.number, q.part);
+                    return (
+                      <option key={q.id} value={idx}>
+                        Q{q.number} (P{q.part}) {ans ? '✓' : '—'}
+                      </option>
+                    );
+                  })}
+                </select>
+
+                {/* Grid expand / collapse button */}
+                <button
+                  type="button"
+                  onClick={() => setIsNavGridExpanded(!isNavGridExpanded)}
+                  className="px-2.5 py-1.5 bg-white hover:bg-fuchsia-50 border-2 border-[#560e51] rounded-xl text-xs font-black text-[#560e51] cursor-pointer shadow-[1.5px_1.5px_0px_0px_#560e51]"
+                  title="Toggle question numbers panel"
+                >
+                  {isNavGridExpanded ? 'Collapse ▲' : 'Expand ▼'}
+                </button>
+              </div>
+            </div>
+
+            {/* Interactive Number Pills */}
+            {isNavGridExpanded && (
+              <div className="pt-3 animate-fade-in">
+                <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                  {activeQuestions.map((q, idx) => {
+                    const isCurrent = idx === currentQuestionIndex;
+                    const isAnswered = isQuestionAnswered(q.number, q.part);
+                    const isFilteredOut = navPartFilter !== 'all' && q.part !== navPartFilter;
+                    const isPartStart = idx > 0 && activeQuestions[idx - 1].part !== q.part && navPartFilter === 'all';
+
+                    return (
+                      <React.Fragment key={q.id}>
+                        {isPartStart && (
+                          <span 
+                            className="h-6 w-[2px] bg-fuchsia-200 mx-1 self-center hidden sm:inline-block" 
+                            title={`Part ${q.part} starts here`}
+                          />
+                        )}
+                        <button
+                          type="button"
+                          id={`toggler-q-${q.number}`}
+                          onClick={() => jumpToQuestion(idx)}
+                          className={`relative min-w-[34px] sm:min-w-[40px] h-8 sm:h-9 px-1.5 rounded-xl text-xs font-mono transition-all cursor-pointer flex items-center justify-center ${
+                            isFilteredOut ? 'opacity-25 hover:opacity-100' : ''
+                          } ${
+                            isCurrent
+                              ? 'bg-[#560e51] text-yellow-300 border-2 border-[#560e51] ring-4 ring-[#9b2c98]/30 font-black shadow-md scale-105 z-10'
+                              : isAnswered
+                              ? 'bg-[#78c222] hover:bg-[#68ab1c] text-[#560e51] border-2 border-[#560e51] font-black shadow-[1.5px_1.5px_0px_0px_#560e51]'
+                              : 'bg-white hover:bg-fuchsia-50 text-slate-800 border-2 border-slate-300 font-bold hover:border-[#9b2c98]'
+                          }`}
+                          title={`Question ${q.number} (Part ${q.part}) — ${isAnswered ? 'Answered' : 'Not answered yet'}. Click to jump!`}
+                        >
+                          <span>{q.number}</span>
+                          {isAnswered && !isCurrent && (
+                            <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-[#43780a] border-2 border-white rounded-full" />
+                          )}
+                        </button>
+                      </React.Fragment>
+                    );
+                  })}
+                </div>
+
+                {/* Color Legend & Helper */}
+                <div className="flex items-center gap-3 sm:gap-4 text-[11px] font-mono font-bold text-slate-600 pt-3 mt-1 border-t border-fuchsia-100 flex-wrap">
+                  <span className="flex items-center gap-1.5">
+                    <span className="w-3.5 h-3.5 rounded-md bg-[#560e51] border border-[#560e51] inline-block shadow-xs" />
+                    <span>Current Active (Q{currentQuestion.number})</span>
+                  </span>
+                  <span className="flex items-center gap-1.5">
+                    <span className="w-3.5 h-3.5 rounded-md bg-[#78c222] border border-[#560e51] inline-block shadow-xs" />
+                    <span>Answered ({answeredCount})</span>
+                  </span>
+                  <span className="flex items-center gap-1.5">
+                    <span className="w-3.5 h-3.5 rounded-md bg-white border-2 border-slate-300 inline-block" />
+                    <span>Unanswered ({totalQuestions - answeredCount})</span>
+                  </span>
+                  <span className="text-slate-400 ml-auto hidden md:inline">
+                    💡 Click any number to jump back & forth anytime!
+                  </span>
+                </div>
+              </div>
+            )}
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           
           {/* LEFT COLUMN: Passage / Audio Context */}
           {hasContextPanel && (
@@ -1368,9 +1578,29 @@ export default function SATMockExam({
                       <span>{formatTime(countdown)}</span>
                     </div>
                   )}
-                  <span className="bg-[#fefaf0] border-2 border-[#560e51] font-mono font-black px-3 py-1.5 rounded-xl text-slate-900 shadow-[2px_2px_0px_0px_#560e51] text-xs">
-                    Q: {currentQuestion.number} / {totalQuestions}
-                  </span>
+                  <div className="flex items-center gap-1 bg-[#fefaf0] border-2 border-[#560e51] p-1 rounded-xl shadow-[2px_2px_0px_0px_#560e51]">
+                    <button
+                      type="button"
+                      onClick={() => jumpToQuestion(currentQuestionIndex - 1)}
+                      disabled={currentQuestionIndex === 0}
+                      className="p-1 rounded-lg hover:bg-fuchsia-100 disabled:opacity-20 cursor-pointer text-[#560e51] transition"
+                      title="Previous Question"
+                    >
+                      <ChevronLeft className="h-3.5 w-3.5" />
+                    </button>
+                    <span className="font-mono font-black px-2 text-xs text-slate-900">
+                      Q: {currentQuestion.number} / {totalQuestions}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => jumpToQuestion(currentQuestionIndex + 1)}
+                      disabled={currentQuestionIndex === totalQuestions - 1}
+                      className="p-1 rounded-lg hover:bg-fuchsia-100 disabled:opacity-20 cursor-pointer text-[#560e51] transition"
+                      title="Next Question"
+                    >
+                      <ChevronRight className="h-3.5 w-3.5" />
+                    </button>
+                  </div>
                 </div>
               </div>
 
@@ -1559,7 +1789,7 @@ export default function SATMockExam({
                       }`}
                     >
                       <HelpCircle className="h-3.5 w-3.5" />
-                      {showEslTips ? 'Tutup Tips' : 'Tips Bahasa (ESL) 🇮🇩'}
+                      {showEslTips ? 'Hide English Guide' : 'Easy English Guide 💡'}
                     </button>
 
                     <button
@@ -1599,17 +1829,17 @@ export default function SATMockExam({
                     </div>
                   )}
 
-                  {/* Indonesian / ESL Transition Guidance */}
+                  {/* EFL Guidance in Easy English */}
                   {showEslTips && (
                     <div className="p-4 bg-lime-50 border-2 border-[#43780a] rounded-xl text-slate-900 space-y-2 text-xs">
                       <span className="font-mono font-black uppercase text-[#43780a] block">
-                        🇮🇩 Tips Menulis Bahasa Inggris untuk Transisi ESL:
+                        💡 Easy English Writing Guide (For EFL Students):
                       </span>
                       <ul className="list-disc list-inside space-y-1 font-medium text-slate-800">
-                        <li><strong>Target Panjang:</strong> Cukup <strong>40 – 60 kata</strong> (sekitar 5 sampai 6 kalimat pendek). Jangan khawatir jika tidak panjang!</li>
-                        <li><strong>Gunakan "to + verb":</strong> Jelaskan tujuan dengan <em>to + kata kerja dasar</em> (contoh: <em>to make electricity</em>, bukan <em>for make</em>).</li>
-                        <li><strong>Pilih 2 Kata Sifat (Adjectives):</strong> Gunakan kata dari Unit 3 seperti <em>cosy</em> (hangat dan nyaman), <em>spacious</em> (luas), atau <em>comfortable</em>.</li>
-                        <li><strong>Mulai Kalimat dengan Mudah:</strong> Kamu bisa gunakan tombol <em>"Load Easy Starter Template"</em> di atas untuk bantuan pola kalimat!</li>
+                        <li><strong>Target Length:</strong> Just <strong>40 – 60 words</strong> (about 5 short sentences). Keep sentences short and clear!</li>
+                        <li><strong>Use "to + verb":</strong> Explain why you built each part using <em>to + base verb</em> (example: <em>to make electricity</em>, <em>to collect rainwater</em>).</li>
+                        <li><strong>Choose 2 Describing Words (Adjectives):</strong> Use Unit 3 words like <em>cosy</em> (warm & safe), <em>spacious</em> (lots of room), or <em>comfortable</em>.</li>
+                        <li><strong>Quick Start:</strong> Click <em>"Load Easy Starter Template"</em> above to get helpful sentence patterns you can easily fill in!</li>
                       </ul>
                     </div>
                   )}
@@ -1959,48 +2189,110 @@ export default function SATMockExam({
               )}
             </div>
 
-            {/* Navigation block */}
-            <div className="flex justify-between items-center pt-5 border-t-2 border-fuchsia-200 mt-6 flex-wrap gap-3">
-              <button
-                id="btn-sat-prev"
-                onClick={handlePrev}
-                disabled={currentQuestionIndex === 0}
-                className="flex items-center gap-1.5 px-4 py-2.5 border-2 border-[#560e51] bg-white hover:bg-fuchsia-50 text-[#560e51] text-xs font-black rounded-xl disabled:opacity-30 cursor-pointer shadow-[2px_2px_0px_0px_#560e51]"
-              >
-                <ChevronLeft className="h-4 w-4" /> Prev
-              </button>
-
-              {examMode === 'exam' && currentQuestionIndex === totalQuestions - 1 ? (
+            {/* Navigation block with fast number togglers & jumpers */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-5 border-t-2 border-fuchsia-200 mt-6">
+              <div className="flex items-center gap-2">
                 <button
-                  id="btn-sat-submit-exam"
-                  onClick={() => {
-                    const unansweredCount = totalQuestions - Object.keys(selectedAnswers).length;
-                    if (unansweredCount > 0) {
-                      if (confirm(`You have ${unansweredCount} unanswered questions! Hand in exam anyway?`)) {
+                  id="btn-sat-prev"
+                  onClick={handlePrev}
+                  disabled={currentQuestionIndex === 0}
+                  className="flex items-center gap-1.5 px-4 py-2.5 border-2 border-[#560e51] bg-white hover:bg-fuchsia-50 text-[#560e51] text-xs font-black rounded-xl disabled:opacity-30 cursor-pointer shadow-[2px_2px_0px_0px_#560e51]"
+                >
+                  <ChevronLeft className="h-4 w-4" /> Prev
+                </button>
+
+                {currentQuestionIndex > 0 && (
+                  <button
+                    type="button"
+                    onClick={() => jumpToQuestion(currentQuestionIndex - 1)}
+                    className="px-2.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-mono font-bold rounded-lg border border-slate-300 hidden md:inline-block cursor-pointer"
+                    title="Jump to previous question"
+                  >
+                    Q{activeQuestions[currentQuestionIndex - 1]?.number}
+                  </button>
+                )}
+              </div>
+
+              {/* Fast Jump Select Dropdown in Footer */}
+              <div className="flex items-center gap-2 justify-center flex-wrap">
+                <span className="text-xs font-mono font-black text-slate-500 hidden sm:inline">Go to:</span>
+                <select
+                  value={currentQuestionIndex}
+                  onChange={(e) => jumpToQuestion(Number(e.target.value))}
+                  className="text-xs font-mono font-black border-2 border-[#560e51] bg-[#fdf2fe] text-[#560e51] rounded-xl py-2 px-3 cursor-pointer shadow-[2px_2px_0px_0px_#560e51]"
+                  aria-label="Bottom jumper select"
+                >
+                  {activeQuestions.map((q, idx) => (
+                    <option key={q.id} value={idx}>
+                      Q{q.number}: Part {q.part} {isQuestionAnswered(q.number, q.part) ? '✓ (Done)' : '—'}
+                    </option>
+                  ))}
+                </select>
+
+                <div className="flex items-center gap-1">
+                  {[1, 2, 3, 4, 5].map((pNum) => (
+                    <button
+                      key={pNum}
+                      type="button"
+                      onClick={() => jumpToQuestion(getPartStartIndex(pNum))}
+                      className={`px-2 py-1 text-[11px] font-mono font-black rounded-lg border cursor-pointer ${
+                        currentQuestion.part === pNum
+                          ? 'bg-[#560e51] text-yellow-300 border-[#560e51]'
+                          : 'bg-white text-slate-700 border-slate-300 hover:bg-fuchsia-50'
+                      }`}
+                      title={`Jump to Part ${pNum}`}
+                    >
+                      P{pNum}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2 justify-end">
+                {currentQuestionIndex < totalQuestions - 1 && (
+                  <button
+                    type="button"
+                    onClick={() => jumpToQuestion(currentQuestionIndex + 1)}
+                    className="px-2.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-mono font-bold rounded-lg border border-slate-300 hidden md:inline-block cursor-pointer"
+                    title="Jump to next question"
+                  >
+                    Q{activeQuestions[currentQuestionIndex + 1]?.number}
+                  </button>
+                )}
+
+                {examMode === 'exam' && currentQuestionIndex === totalQuestions - 1 ? (
+                  <button
+                    id="btn-sat-submit-exam"
+                    onClick={() => {
+                      const unansweredCount = totalQuestions - answeredCount;
+                      if (unansweredCount > 0) {
+                        if (confirm(`You have ${unansweredCount} unanswered questions! Hand in exam anyway?`)) {
+                          finishExam();
+                        }
+                      } else if (confirm('Ready to turn in your Unit 3 Summative Assessment?')) {
                         finishExam();
                       }
-                    } else if (confirm('Ready to turn in your Unit 3 Summative Assessment?')) {
-                      finishExam();
-                    }
-                  }}
-                  className="px-6 py-2.5 bg-[#78c222] hover:bg-[#68ab1c] border-2 border-[#560e51] text-[#560e51] font-black rounded-xl text-xs sm:text-sm shadow-[2px_2px_0px_0px_#560e51] cursor-pointer uppercase"
-                >
-                  Turn In Assessment 📝
-                </button>
-              ) : (
-                <button
-                  id="btn-sat-next"
-                  onClick={handleNext}
-                  disabled={currentQuestionIndex === totalQuestions - 1}
-                  className="flex items-center gap-1.5 px-5 py-2.5 bg-[#560e51] hover:bg-[#43093f] text-white text-xs sm:text-sm font-black rounded-xl disabled:opacity-30 cursor-pointer shadow-[2px_2px_0px_0px_#560e51]"
-                >
-                  Next <ChevronRight className="h-4 w-4" />
-                </button>
-              )}
+                    }}
+                    className="px-6 py-2.5 bg-[#78c222] hover:bg-[#68ab1c] border-2 border-[#560e51] text-[#560e51] font-black rounded-xl text-xs sm:text-sm shadow-[2px_2px_0px_0px_#560e51] cursor-pointer uppercase"
+                  >
+                    Turn In Assessment 📝
+                  </button>
+                ) : (
+                  <button
+                    id="btn-sat-next"
+                    onClick={handleNext}
+                    disabled={currentQuestionIndex === totalQuestions - 1}
+                    className="flex items-center gap-1.5 px-5 py-2.5 bg-[#560e51] hover:bg-[#43093f] text-white text-xs sm:text-sm font-black rounded-xl disabled:opacity-30 cursor-pointer shadow-[2px_2px_0px_0px_#560e51]"
+                  >
+                    Next <ChevronRight className="h-4 w-4" />
+                  </button>
+                )}
+              </div>
             </div>
 
           </div>
 
+        </div>
         </div>
       )}
 

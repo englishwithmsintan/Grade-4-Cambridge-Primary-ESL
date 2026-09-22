@@ -119,13 +119,18 @@ export default function App() {
     localStorage.setItem('sdit_auliya_unit3_dreamhome', JSON.stringify(dreamHomeData));
   }, [dreamHomeData]);
 
-  // Calculate mastery percentage based on 50-mark SAT schema
+  // Calculate comprehensive mastery percentage across Unit 3 activities (Vocab, Grammar, Mock SAT, Games)
   const totalVocab = FLASHCARDS.length;
   const vocabReviewedCount = progress.vocabReviewed?.length || 0;
-  const vocabScore = totalVocab > 0 ? (vocabReviewedCount / totalVocab) * 30 : 0;
-  const examScore = progress.mockExamScore !== null ? (progress.mockExamScore / 50) * 50 : 0;
-  const gamesScore = Math.min(progress.gamesPlayed.length * 4, 20);
-  const masteryPercentage = Math.min(100, Math.round(vocabScore + examScore + gamesScore));
+  const vocabScore = totalVocab > 0 ? (vocabReviewedCount / totalVocab) * 25 : 0;
+  const examScore = progress.mockExamScore !== null ? (progress.mockExamScore / 50) * 45 : 0;
+  const grammarEntries = Object.values(progress.grammarAccuracy || {}) as number[];
+  const grammarAvg = grammarEntries.length > 0
+    ? grammarEntries.reduce((a, b) => a + b, 0) / grammarEntries.length
+    : 0;
+  const grammarScore = (grammarAvg / 100) * 15;
+  const gamesScore = Math.min(progress.gamesPlayed.length * 5, 15);
+  const masteryPercentage = Math.min(100, Math.round(vocabScore + examScore + grammarScore + gamesScore));
 
   // Handler to toggle vocabulary review status
   const handleMarkVocabReviewed = (id: string, mastered: boolean) => {

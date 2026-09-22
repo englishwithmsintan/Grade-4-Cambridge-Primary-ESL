@@ -1227,41 +1227,29 @@ export const MOCK_SAT_QUESTIONS: SATQuestion[] = [
 ];
 
 // =============================================================================
-// MOCK SAT EXAM · QUESTION SET B (ALTERNATE FORM - DIFFERENT QUESTIONS)
-// Formatted strictly to SDIT Auliya & Cambridge Primary Grade 4 ESL specifications
-// (Same sources: Listening Audio, Adjectives Box, Eco-House, Colosseum, Dream Home)
+// MOCK SAT EXAM · QUESTION SET B (SAME ORIGINAL TEST QUESTIONS - SHUFFLED NUMBERS)
+// Exact questions from the SDIT Auliya & Cambridge Primary Grade 4 ESL Assessment Paper,
+// with question order / numbers shuffled for challenge & anti-memorization practice.
 // =============================================================================
 
-export const PART_2_DEFINITIONS_SET_B = [
-  { letter: 'A', text: 'filled with plenty of bright sunshine and daylight' },
-  { letter: 'B', text: 'warm, pleasant, and feeling safe and sheltered' },
-  { letter: 'C', text: 'good for protecting the environment and saving energy' },
-  { letter: 'D', text: 'strange, different, and not like ordinary everyday things' },
-  { letter: 'E', text: 'very, very big in size (Example: 0. enormous)' },
-  { letter: 'F', text: 'quiet, calm, and free from disturbance or loud noise' },
-  { letter: 'G', text: 'very strong, solid, and not easily damaged' },
-  { letter: 'H', text: 'wonderful, amazing, and breathtaking to look at' },
-  { letter: 'I', text: 'following old cultural customs and traditional ways' },
-  { letter: 'J', text: 'providing pleasant physical ease and relaxation' },
-  { letter: 'K', text: 'famous and recognized by millions of people globally' },
-];
+export const PART_2_DEFINITIONS_SET_B = PART_2_DEFINITIONS;
 
 export const MOCK_SAT_QUESTIONS_SET_B: SATQuestion[] = [
   // --- PART 1: LISTENING (5 Points) ---
-  // Source: "Homes Around the World" Audio Track
-  // Word Box: move, wooden poles, tall, one, safe and warm, villages
+  // Source: "Homes Around the World" Audio Track (Exact Original Test Blanks, Shuffled Order)
+  // Word Box: yurt | bungalow | apartment | stilt house | homes | detached house
   {
     id: 101,
     number: 1,
     category: 'listening',
     part: 1,
     points: 1,
-    question: 'Fill in blank (1): "In Mongolia, a yurt is a special round tent because nomadic families can (1) ____________ it easily from place to place."',
-    options: ['move', 'break', 'buy', 'paint', 'lock', 'hide'],
-    correctAnswer: 'move',
-    blankWordOptions: ['move', 'wooden poles', 'tall', 'one', 'safe and warm', 'villages'],
-    explanation: 'The audio explains: "...and they can move it easily from place to place."',
-    hint: 'Listen for what nomadic families can do easily with their portable yurt.'
+    question: 'Fill in blank (3): "In some parts of Asia, people build a (3) ____________ on tall wooden poles, so the water cannot come inside."',
+    options: ['stilt house', 'yurt', 'bungalow', 'apartment', 'homes', 'detached house'],
+    correctAnswer: 'stilt house',
+    explanation: 'A house raised on tall wooden poles above water or damp ground is called a stilt house.',
+    hint: 'Houses built on tall wooden poles to protect from water.',
+    blankWordOptions: ['homes', 'yurt', 'bungalow', 'apartment', 'stilt house', 'detached house']
   },
   {
     id: 102,
@@ -1269,12 +1257,12 @@ export const MOCK_SAT_QUESTIONS_SET_B: SATQuestion[] = [
     category: 'listening',
     part: 1,
     points: 1,
-    question: 'Fill in blank (2): "In some parts of Asia, people build a stilt house on tall (2) ____________ so water cannot enter."',
-    options: ['wooden poles', 'stone walls', 'iron bridges', 'glass windows', 'mud bricks', 'concrete blocks'],
-    correctAnswer: 'wooden poles',
-    blankWordOptions: ['move', 'wooden poles', 'tall', 'one', 'safe and warm', 'villages'],
-    explanation: 'The audio states: "...people build a stilt house on tall wooden poles, so the water cannot come inside."',
-    hint: 'Listen for the tall wooden supports that keep the stilt house elevated.'
+    question: 'Fill in blank (1): "People live in many different kinds of (1) ____________ around the world."',
+    options: ['homes', 'yurt', 'bungalow', 'apartment', 'stilt house', 'detached house'],
+    correctAnswer: 'homes',
+    explanation: 'The opening line states: "People live in many different kinds of homes around the world."',
+    hint: 'Listen to the first sentence about where families live.',
+    blankWordOptions: ['homes', 'yurt', 'bungalow', 'apartment', 'stilt house', 'detached house']
   },
   {
     id: 103,
@@ -1282,12 +1270,12 @@ export const MOCK_SAT_QUESTIONS_SET_B: SATQuestion[] = [
     category: 'listening',
     part: 1,
     points: 1,
-    question: 'Fill in blank (3): "In big, busy cities, many families live in an apartment on one floor of a very (3) ____________ building."',
-    options: ['tall', 'quiet', 'wooden', 'ancient', 'cold', 'green'],
-    correctAnswer: 'tall',
-    blankWordOptions: ['move', 'wooden poles', 'tall', 'one', 'safe and warm', 'villages'],
-    explanation: 'The audio states: "...on one floor of a very tall building."',
-    hint: 'What word describes the very high building in big cities?'
+    question: 'Fill in blank (5): "In quiet villages, you can find a (5) ____________ which is a small house with only one floor."',
+    options: ['bungalow', 'yurt', 'apartment', 'stilt house', 'homes', 'detached house'],
+    correctAnswer: 'bungalow',
+    explanation: 'A single-story residential home with only one level is a bungalow.',
+    hint: 'A small house with only one floor and no stairs.',
+    blankWordOptions: ['homes', 'yurt', 'bungalow', 'apartment', 'stilt house', 'detached house']
   },
   {
     id: 104,
@@ -1295,12 +1283,12 @@ export const MOCK_SAT_QUESTIONS_SET_B: SATQuestion[] = [
     category: 'listening',
     part: 1,
     points: 1,
-    question: 'Fill in blank (4): "In quiet country villages, a bungalow is a small house designed with only (4) ____________ floor."',
-    options: ['one', 'two', 'three', 'four', 'five', 'six'],
-    correctAnswer: 'one',
-    blankWordOptions: ['move', 'wooden poles', 'tall', 'one', 'safe and warm', 'villages'],
-    explanation: 'The audio states: "...which is a small house with only one floor."',
-    hint: 'How many floors does a bungalow have in the audio?'
+    question: 'Fill in blank (2): "In Mongolia, some families live in a round tent called a (2) ____________ and they can move it easily from place to place."',
+    options: ['yurt', 'bungalow', 'apartment', 'stilt house', 'homes', 'detached house'],
+    correctAnswer: 'yurt',
+    explanation: 'A traditional round portable tent used in Mongolia is called a yurt.',
+    hint: 'A round tent used by nomads in Mongolia that moves easily.',
+    blankWordOptions: ['homes', 'yurt', 'bungalow', 'apartment', 'stilt house', 'detached house']
   },
   {
     id: 105,
@@ -1308,29 +1296,35 @@ export const MOCK_SAT_QUESTIONS_SET_B: SATQuestion[] = [
     category: 'listening',
     part: 1,
     points: 1,
-    question: 'Fill in blank (5): "Even though homes around the world are different, they all keep families (5) ____________."',
-    options: ['safe and warm', 'busy and noisy', 'away from home', 'wet and cold', 'travelling everywhere', 'alone in the dark'],
-    correctAnswer: 'safe and warm',
-    blankWordOptions: ['move', 'wooden poles', 'tall', 'one', 'safe and warm', 'villages'],
-    explanation: 'The audio ends with: "...they all keep families safe and warm."',
-    hint: 'Listen for the final two words describing how homes protect families.'
+    question: 'Fill in blank (4): "In big, busy cities, many families live in an (4) ____________ on one floor of a very tall building."',
+    options: ['apartment', 'yurt', 'bungalow', 'stilt house', 'homes', 'detached house'],
+    correctAnswer: 'apartment',
+    explanation: 'Notice the article "an", matching the vowel in apartment (one floor of a tall skyscraper).',
+    hint: 'Follows the article "an" in big, busy cities.',
+    blankWordOptions: ['homes', 'yurt', 'bungalow', 'apartment', 'stilt house', 'detached house']
   },
 
   // --- PART 2: VOCABULARY / ADJECTIVES (10 Points) ---
-  // Match Adjective to Definition (A–K)
+  // Exact 10 words from original test (ESL PS), matched to PART_2_DEFINITIONS (A–K)
+  // Shuffled order: ancient, comfortable, modern, tiny, famous, spacious, colourful, relaxing, mysterious, wooden
   {
     id: 106,
     number: 6,
     category: 'vocabulary',
     part: 2,
     points: 1,
-    matchLetter: 'B',
-    adjective: 'cosy',
-    question: 'Match 1. cosy to its definition (A–K): warm, pleasant, and feeling safe and sheltered',
-    options: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K'],
-    correctAnswer: 'B',
-    explanation: 'Cosy means warm, pleasant, and feeling safe and sheltered (Definition B).',
-    hint: 'Think of a warm bed or a snug fireplace.'
+    adjective: 'ancient',
+    question: 'Match 5. ancient to its definition:',
+    options: [
+      'C. very old',
+      'H. new, not old-fashioned',
+      'G. with a lot of room inside',
+      'E. very, very big'
+    ],
+    correctAnswer: 'C. very old',
+    matchLetter: 'C',
+    explanation: 'Ancient means existing from a long time ago in history; very old (Definition C).',
+    hint: 'Built thousands of years ago like the Colosseum.'
   },
   {
     id: 107,
@@ -1338,13 +1332,18 @@ export const MOCK_SAT_QUESTIONS_SET_B: SATQuestion[] = [
     category: 'vocabulary',
     part: 2,
     points: 1,
-    matchLetter: 'C',
-    adjective: 'eco-friendly',
-    question: 'Match 2. eco-friendly to its definition (A–K): good for protecting the environment and saving energy',
-    options: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K'],
-    correctAnswer: 'C',
-    explanation: 'Eco-friendly means helpful to nature and saving planet resources (Definition C).',
-    hint: 'Solar panels and rainwater tubs are eco-friendly.'
+    adjective: 'comfortable',
+    question: 'Match 3. comfortable to its definition:',
+    options: [
+      'F. nice to sit or relax in',
+      'G. with a lot of room inside',
+      'I. makes you feel calm',
+      'K. very, very small'
+    ],
+    correctAnswer: 'F. nice to sit or relax in',
+    matchLetter: 'F',
+    explanation: 'Comfortable describes a sofa or home that is nice to sit or relax in (Definition F).',
+    hint: 'Opposite of uncomfortable; cozy to sit in.'
   },
   {
     id: 108,
@@ -1352,13 +1351,18 @@ export const MOCK_SAT_QUESTIONS_SET_B: SATQuestion[] = [
     category: 'vocabulary',
     part: 2,
     points: 1,
-    matchLetter: 'D',
-    adjective: 'unusual',
-    question: 'Match 3. unusual to its definition (A–K): strange, different, and not like ordinary everyday things',
-    options: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K'],
-    correctAnswer: 'D',
-    explanation: 'Unusual means not ordinary, curious, or unique (Definition D).',
-    hint: 'A building shaped like a giant shoe is unusual!'
+    adjective: 'modern',
+    question: 'Match 9. modern to its definition:',
+    options: [
+      'H. new, not old-fashioned',
+      'C. very old',
+      'I. makes you feel calm',
+      'J. made of wood'
+    ],
+    correctAnswer: 'H. new, not old-fashioned',
+    matchLetter: 'H',
+    explanation: 'Modern means relating to present or recent times; new, not old-fashioned (Definition H).',
+    hint: 'Opposite of ancient and old-fashioned.'
   },
   {
     id: 109,
@@ -1366,13 +1370,18 @@ export const MOCK_SAT_QUESTIONS_SET_B: SATQuestion[] = [
     category: 'vocabulary',
     part: 2,
     points: 1,
-    matchLetter: 'F',
-    adjective: 'peaceful',
-    question: 'Match 4. peaceful to its definition (A–K): quiet, calm, and free from disturbance or loud noise',
-    options: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K'],
-    correctAnswer: 'F',
-    explanation: 'Peaceful means calm, quiet, and tranquil (Definition F).',
-    hint: 'A quiet village without busy traffic is peaceful.'
+    adjective: 'tiny',
+    question: 'Match 6. tiny to its definition:',
+    options: [
+      'K. very, very small',
+      'E. very, very big',
+      'G. with a lot of room inside',
+      'F. nice to sit or relax in'
+    ],
+    correctAnswer: 'K. very, very small',
+    matchLetter: 'K',
+    explanation: 'Tiny means minuscule; very, very small (Definition K).',
+    hint: 'The opposite of enormous.'
   },
   {
     id: 110,
@@ -1380,13 +1389,18 @@ export const MOCK_SAT_QUESTIONS_SET_B: SATQuestion[] = [
     category: 'vocabulary',
     part: 2,
     points: 1,
-    matchLetter: 'G',
-    adjective: 'sturdy',
-    question: 'Match 5. sturdy to its definition (A–K): very strong, solid, and not easily damaged',
-    options: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K'],
-    correctAnswer: 'G',
-    explanation: 'Sturdy means strongly built and resilient against wind or rain (Definition G).',
-    hint: 'Thick wooden poles and stone walls make a house sturdy.'
+    adjective: 'famous',
+    question: 'Match 1. famous to its definition:',
+    options: [
+      'B. known by lots of people',
+      'A. has lots of bright colours',
+      'C. very old',
+      'D. with lots of secrets'
+    ],
+    correctAnswer: 'B. known by lots of people',
+    matchLetter: 'B',
+    explanation: 'Famous means widely recognized and known by lots of people (Definition B).',
+    hint: 'Think of famous landmarks like Big Ben or the Eiffel Tower.'
   },
   {
     id: 111,
@@ -1394,13 +1408,18 @@ export const MOCK_SAT_QUESTIONS_SET_B: SATQuestion[] = [
     category: 'vocabulary',
     part: 2,
     points: 1,
-    matchLetter: 'H',
-    adjective: 'spectacular',
-    question: 'Match 6. spectacular to its definition (A–K): wonderful, amazing, and breathtaking to look at',
-    options: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K'],
-    correctAnswer: 'H',
-    explanation: 'Spectacular means visually breathtaking and impressive (Definition H).',
-    hint: 'The view of the Colosseum in Rome is spectacular.'
+    adjective: 'spacious',
+    question: 'Match 8. spacious to its definition:',
+    options: [
+      'G. with a lot of room inside',
+      'E. very, very big',
+      'F. nice to sit or relax in',
+      'H. new, not old-fashioned'
+    ],
+    correctAnswer: 'G. with a lot of room inside',
+    matchLetter: 'G',
+    explanation: 'Spacious means roomy, having with a lot of room inside (Definition G).',
+    hint: 'Contains the root word "space".'
   },
   {
     id: 112,
@@ -1408,13 +1427,18 @@ export const MOCK_SAT_QUESTIONS_SET_B: SATQuestion[] = [
     category: 'vocabulary',
     part: 2,
     points: 1,
-    matchLetter: 'I',
-    adjective: 'traditional',
-    question: 'Match 7. traditional to its definition (A–K): following old cultural customs and traditional ways',
-    options: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K'],
-    correctAnswer: 'I',
-    explanation: 'Traditional relates to ancient customs passed down through generations (Definition I).',
-    hint: 'Yurts in Mongolia are traditional nomad dwellings.'
+    adjective: 'colourful',
+    question: 'Match 2. colourful to its definition:',
+    options: [
+      'A. has lots of bright colours',
+      'B. known by lots of people',
+      'I. makes you feel calm',
+      'F. nice to sit or relax in'
+    ],
+    correctAnswer: 'A. has lots of bright colours',
+    matchLetter: 'A',
+    explanation: 'Colourful describes items that have lots of bright colours (Definition A).',
+    hint: 'Look for the keyword "bright colours".'
   },
   {
     id: 113,
@@ -1422,13 +1446,18 @@ export const MOCK_SAT_QUESTIONS_SET_B: SATQuestion[] = [
     category: 'vocabulary',
     part: 2,
     points: 1,
-    matchLetter: 'A',
-    adjective: 'bright',
-    question: 'Match 8. bright to its definition (A–K): filled with plenty of bright sunshine and daylight',
-    options: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K'],
-    correctAnswer: 'A',
-    explanation: 'Bright means full of light or sunshine (Definition A).',
-    hint: 'Big round windows make a room bright.'
+    adjective: 'relaxing',
+    question: 'Match 10. relaxing to its definition:',
+    options: [
+      'I. makes you feel calm',
+      'F. nice to sit or relax in',
+      'A. has lots of bright colours',
+      'D. with lots of secrets'
+    ],
+    correctAnswer: 'I. makes you feel calm',
+    matchLetter: 'I',
+    explanation: 'Relaxing means restful and makes you feel calm (Definition I).',
+    hint: 'Brings peace and makes you feel calm.'
   },
   {
     id: 114,
@@ -1436,13 +1465,18 @@ export const MOCK_SAT_QUESTIONS_SET_B: SATQuestion[] = [
     category: 'vocabulary',
     part: 2,
     points: 1,
-    matchLetter: 'J',
-    adjective: 'comfortable',
-    question: 'Match 9. comfortable to its definition (A–K): providing pleasant physical ease and relaxation',
-    options: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K'],
-    correctAnswer: 'J',
-    explanation: 'Comfortable means giving pleasant physical rest and ease (Definition J).',
-    hint: 'Soft cushions and warm rooms make a home comfortable.'
+    adjective: 'mysterious',
+    question: 'Match 4. mysterious to its definition:',
+    options: [
+      'D. with lots of secrets',
+      'C. very old',
+      'H. new, not old-fashioned',
+      'J. made of wood'
+    ],
+    correctAnswer: 'D. with lots of secrets',
+    matchLetter: 'D',
+    explanation: 'Mysterious means puzzling, with lots of secrets (Definition D).',
+    hint: 'Related to mysteries and hidden secrets.'
   },
   {
     id: 115,
@@ -1450,29 +1484,34 @@ export const MOCK_SAT_QUESTIONS_SET_B: SATQuestion[] = [
     category: 'vocabulary',
     part: 2,
     points: 1,
-    matchLetter: 'K',
-    adjective: 'famous',
-    question: 'Match 10. famous to its definition (A–K): famous and recognized by millions of people globally',
-    options: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K'],
-    correctAnswer: 'K',
-    explanation: 'Famous means celebrated and known worldwide (Definition K).',
-    hint: 'The Colosseum is famous across the entire world.'
+    adjective: 'wooden',
+    question: 'Match 7. wooden to its definition:',
+    options: [
+      'J. made of wood',
+      'A. has lots of bright colours',
+      'H. new, not old-fashioned',
+      'D. with lots of secrets'
+    ],
+    correctAnswer: 'J. made of wood',
+    matchLetter: 'J',
+    explanation: 'Wooden denotes an object constructed or made of wood (Definition J).',
+    hint: 'Material derived from trees and timber.'
   },
 
   // --- PART 3: GRAMMAR (10 Points) ---
-  // Source: "The Eco-House on the Hill"
-  // Section A: Infinitives of Purpose ("to + verb")
+  // Text: "THE ECO-HOUSE ON THE HILL" (Exact Original Sentences, Shuffled Order)
+  // Section A: Infinitives of Purpose ("to + verb") - Shuffled order: Sentences 4, 1, 5, 2, 3
   {
     id: 116,
     number: 16,
     category: 'grammar',
     part: 3,
     points: 1,
-    question: 'Complete the sentence with an infinitive of purpose: "Mr. Baggins planted green grass on the roof ____________ (protect) the house from cold winter winds."',
-    options: ['to protect', 'protecting', 'protected', 'to protects'],
-    correctAnswer: 'to protect',
-    explanation: 'Infinitives of purpose always use "to + base verb": to protect.',
-    hint: 'Use "to" + the base verb in brackets: (protect).'
+    question: 'Complete sentence 4: "Grass grows on the roof ____________ (keep) the house warm in winter."',
+    options: ['to keep', 'keeping', 'to keeping', 'for keep'],
+    correctAnswer: 'to keep',
+    explanation: 'Infinitives of purpose take "to + base verb": to keep.',
+    hint: 'Use "to" plus the verb in parentheses: (keep).'
   },
   {
     id: 117,
@@ -1480,11 +1519,11 @@ export const MOCK_SAT_QUESTIONS_SET_B: SATQuestion[] = [
     category: 'grammar',
     part: 3,
     points: 1,
-    question: 'Complete the sentence with an infinitive of purpose: "He placed a large water barrel outside ____________ (water) his fresh organic vegetables."',
-    options: ['to water', 'watering', 'to waters', 'for water'],
-    correctAnswer: 'to water',
-    explanation: 'We explain why Mr. Baggins put the barrel outside using "to water".',
-    hint: 'Use "to" + base verb: (water).'
+    question: 'Complete sentence 1: "He used local materials ____________ (build) the walls."',
+    options: ['to build', 'building', 'built', 'to building'],
+    correctAnswer: 'to build',
+    explanation: 'Infinitives of purpose take "to + base verb": to build.',
+    hint: 'Use "to" plus the verb in parentheses: (build).'
   },
   {
     id: 118,
@@ -1492,11 +1531,11 @@ export const MOCK_SAT_QUESTIONS_SET_B: SATQuestion[] = [
     category: 'grammar',
     part: 3,
     points: 1,
-    question: 'Complete the sentence with an infinitive of purpose: "The builder installed extra-large windows ____________ (catch) bright morning sunlight."',
-    options: ['to catch', 'catching', 'caught', 'to catches'],
-    correctAnswer: 'to catch',
-    explanation: 'The purpose of large windows is "to catch" sunlight.',
-    hint: 'Use "to" + the verb in brackets: (catch).'
+    question: 'Complete sentence 5: "He put a large tub outside ____________ (collect) rainwater."',
+    options: ['to collect', 'collecting', 'to collects', 'for collecting'],
+    correctAnswer: 'to collect',
+    explanation: 'Infinitives of purpose take "to + base verb": to collect.',
+    hint: 'Use "to" plus the verb in parentheses: (collect).'
   },
   {
     id: 119,
@@ -1504,11 +1543,11 @@ export const MOCK_SAT_QUESTIONS_SET_B: SATQuestion[] = [
     category: 'grammar',
     part: 3,
     points: 1,
-    question: 'Complete the sentence with an infinitive of purpose: "Solar panels were mounted on the roof ____________ (generate) clean electricity for the lamps."',
-    options: ['to generate', 'generating', 'to generates', 'generated'],
-    correctAnswer: 'to generate',
-    explanation: 'We state the purpose of the solar panels: "to generate" electricity.',
-    hint: 'Use "to" + the verb: (generate).'
+    question: 'Complete sentence 2: "There are big windows ____________ (let) in natural light."',
+    options: ['to let', 'letting', 'to letting', 'for let'],
+    correctAnswer: 'to let',
+    explanation: 'Infinitives of purpose take "to + base verb": to let.',
+    hint: 'Use "to" plus the verb in parentheses: (let).'
   },
   {
     id: 120,
@@ -1516,25 +1555,25 @@ export const MOCK_SAT_QUESTIONS_SET_B: SATQuestion[] = [
     category: 'grammar',
     part: 3,
     points: 1,
-    question: 'Complete the sentence with an infinitive of purpose: "Mr. Baggins chose local mud and stone ____________ (reduce) pollution from heavy trucks."',
-    options: ['to reduce', 'reducing', 'to reduces', 'for reduce'],
-    correctAnswer: 'to reduce',
-    explanation: 'The purpose of using local materials is "to reduce" pollution.',
-    hint: 'Use "to" + base verb: (reduce).'
+    question: 'Complete sentence 3: "There are solar panels on the roof ____________ (provide) energy for the lights."',
+    options: ['to provide', 'providing', 'to provides', 'for provide'],
+    correctAnswer: 'to provide',
+    explanation: 'Infinitives of purpose take "to + base verb": to provide.',
+    hint: 'Use "to" plus the verb in parentheses: (provide).'
   },
 
-  // Section B: Modal Verbs of Possibility (can't, must, might, could)
+  // Section B: Modal Verbs of Possibility - Shuffled order: Sentences 7, 9, 6, 10, 8
   {
     id: 121,
     number: 21,
     category: 'grammar',
     part: 3,
     points: 1,
-    question: 'Choose the correct modal verb of certainty: "Warm grey smoke is rising from the chimney. Someone ____________ be cooking dinner inside!"',
-    options: ['must', 'can\'t'],
-    correctAnswer: 'must',
-    explanation: 'Rising smoke gives clear visual proof (100% certainty), so we use "must".',
-    hint: 'Smoke coming from the chimney is definite proof someone is inside.'
+    question: 'Complete sentence 7: "Nobody lives there, so it ____________ be a family home." (can’t / must)',
+    options: ['can\'t', 'must'],
+    correctAnswer: 'can\'t',
+    explanation: 'If nobody lives there, it is impossible (0%) for it to be a family home, so we use can’t.',
+    hint: 'Can it be a family home if nobody lives there at all?'
   },
   {
     id: 122,
@@ -1542,11 +1581,11 @@ export const MOCK_SAT_QUESTIONS_SET_B: SATQuestion[] = [
     category: 'grammar',
     part: 3,
     points: 1,
-    question: 'Choose the correct modal verb of possibility: "The strange shoe building has tiny windows and a bright red door. It ____________ be an artist’s workshop, but I am not completely sure."',
-    options: ['might', 'must'],
-    correctAnswer: 'might',
-    explanation: '"I am not completely sure" expresses uncertainty (~50% chance), so we use "might".',
-    hint: 'Look at the phrase "not completely sure" - is the speaker guessing or certain?'
+    question: 'Complete sentence 9: "It is much too small, so it ____________ be a supermarket." (can’t / might)',
+    options: ['can\'t', 'might'],
+    correctAnswer: 'can\'t',
+    explanation: 'Being "much too small" makes it impossible to be a supermarket, so we use can’t.',
+    hint: 'A tiny shoe building cannot possibly hold aisles of supermarket goods.'
   },
   {
     id: 123,
@@ -1554,11 +1593,11 @@ export const MOCK_SAT_QUESTIONS_SET_B: SATQuestion[] = [
     category: 'grammar',
     part: 3,
     points: 1,
-    question: 'Choose the correct modal verb of impossibility: "The strange building has no bedrooms or beds at all, so it ____________ be a hotel."',
-    options: ['can\'t', 'must'],
-    correctAnswer: 'can\'t',
-    explanation: 'A building with no bedrooms or beds cannot possibly be a hotel (0% impossible), so we use "can\'t".',
-    hint: 'Is it possible for guests to sleep in a hotel that has zero beds?'
+    question: 'Complete sentence 6: "I am not sure what the strange building is. It ____________ be a museum." (might / must)',
+    options: ['might', 'must'],
+    correctAnswer: 'might',
+    explanation: '"I am not sure" expresses uncertainty (~50% possibility), so we use might.',
+    hint: 'Look at the phrase "I am not sure" - is the speaker 100% sure or guessing?'
   },
   {
     id: 124,
@@ -1566,11 +1605,11 @@ export const MOCK_SAT_QUESTIONS_SET_B: SATQuestion[] = [
     category: 'grammar',
     part: 3,
     points: 1,
-    question: 'Choose the correct modal verb of possibility: "There are thousands of books stacked inside, so it ____________ be a small community library."',
-    options: ['could', 'can\'t'],
-    correctAnswer: 'could',
-    explanation: 'Thousands of books make it a very plausible possibility, so we use "could".',
-    hint: 'Thousands of books make a library a strong possibility.'
+    question: 'Complete question 10: "____________ it be a school?" (Could / Does)',
+    options: ['Could', 'Does'],
+    correctAnswer: 'Could',
+    explanation: 'We use the modal auxiliary "Could" to ask about a possible identity ("Could it be...?").',
+    hint: 'Which auxiliary pairs with the base verb "be" to express possibility?'
   },
   {
     id: 125,
@@ -1578,26 +1617,31 @@ export const MOCK_SAT_QUESTIONS_SET_B: SATQuestion[] = [
     category: 'grammar',
     part: 3,
     points: 1,
-    question: 'Choose the correct auxiliary word to ask about possibility: "____________ that unusual shoe building be open for visitors on weekends?"',
-    options: ['Could', 'Does'],
-    correctAnswer: 'Could',
-    explanation: 'We use modal "Could" to inquire about theoretical possibility ("Could it be...?").',
-    hint: 'Which word asks about possibility before the base verb "be"?'
+    question: 'Complete sentence 8: "There are lots and lots of books inside, so it ____________ be a library!" (might / must)',
+    options: ['must', 'might'],
+    correctAnswer: 'must',
+    explanation: 'Having lots and lots of books provides strong evidence of certainty (100%), so we use must.',
+    hint: 'Strong evidence of lots of books makes the speaker completely sure.'
   },
 
   // --- PART 4: READING COMPREHENSION (10 Points) ---
-  // Source: "The Colosseum in Rome"
+  // Text: "THE COLOSSEUM" (Exact Original Questions, Shuffled Order: 3, 1, 4, 2, 5, 7, 6)
   {
     id: 126,
     number: 26,
     category: 'reading',
     part: 4,
     points: 1,
-    question: 'How long ago did people start building the Colosseum in Rome?',
-    options: ['Almost 2,000 years ago', 'About 50 years ago', 'Over 6 million years ago', 'Only 10 years ago'],
-    correctAnswer: 'Almost 2,000 years ago',
-    explanation: 'The text states: "People started to build it almost 2,000 years ago..."',
-    hint: 'Look in the first two lines of the passage for the time period.'
+    question: '3. Who fought in the Colosseum long ago?',
+    options: [
+      'a) Gladiators',
+      'b) Professors',
+      'c) Builders',
+      'd) Emperors'
+    ],
+    correctAnswer: 'a) Gladiators',
+    explanation: 'The text states: "Long ago, gladiators came here to fight in front of big crowds."',
+    hint: 'Fierce Roman fighters who fought in front of big crowds.'
   },
   {
     id: 127,
@@ -1605,11 +1649,16 @@ export const MOCK_SAT_QUESTIONS_SET_B: SATQuestion[] = [
     category: 'reading',
     part: 4,
     points: 1,
-    question: 'How many spectators could sit inside the Colosseum to watch shows?',
-    options: ['More than 50,000 people', 'About 2,000 people', 'Exactly 50 people', '6 million people'],
-    correctAnswer: 'More than 50,000 people',
-    explanation: 'Paragraph 1 notes: "It is enormous, more than 50,000 people could sit inside to watch shows."',
-    hint: 'Scan for the number of spectators sitting inside.'
+    question: '1. Where is the Colosseum located?',
+    options: [
+      'a) In the middle of Rome',
+      'b) In a forest',
+      'c) In the sea',
+      'd) On a mountain'
+    ],
+    correctAnswer: 'a) In the middle of Rome',
+    explanation: 'Sentence 1 states: "The Colosseum is an ancient building in the middle of Rome, the capital city of Italy."',
+    hint: 'Check the very first line of the Colosseum text.'
   },
   {
     id: 128,
@@ -1617,11 +1666,16 @@ export const MOCK_SAT_QUESTIONS_SET_B: SATQuestion[] = [
     category: 'reading',
     part: 4,
     points: 1,
-    question: 'Why is the Colosseum broken in some places today?',
-    options: ['Because of earthquakes and people taking its stones', 'Because fierce flood water destroyed the walls', 'Because workers built it with wood and mud', 'Because wild animals chewed through the bricks'],
-    correctAnswer: 'Because of earthquakes and people taking its stones',
-    explanation: 'The text explicitly states: "Today the Colosseum is broken in some places, because of earthquakes and because people took its stones to build other things."',
-    hint: 'Look for two natural and human reasons why parts of the building were broken.'
+    question: '4. How many visitors come to see the Colosseum every year?',
+    options: [
+      'a) More than 6 million',
+      'b) About 2,000',
+      'c) More than 50,000',
+      'd) About 500'
+    ],
+    correctAnswer: 'a) More than 6 million',
+    explanation: 'Paragraph 2 states: "Even so, more than six million visitors come every year to see it."',
+    hint: 'Look for the annual tourist visitor count in the second paragraph.'
   },
   {
     id: 129,
@@ -1629,11 +1683,16 @@ export const MOCK_SAT_QUESTIONS_SET_B: SATQuestion[] = [
     category: 'reading',
     part: 4,
     points: 1,
-    question: 'According to the text, why is it a good idea for visitors to buy their tickets online before visiting?',
-    options: ['To save time', 'To get free pizza in Rome', 'To ride the city metro for free', 'To fight with gladiators'],
-    correctAnswer: 'To save time',
-    explanation: 'The text advises: "...it is a good idea to buy your ticket online to save time."',
-    hint: 'Check the sentence about buying tickets online.'
+    question: '2. What did workers use to build the Colosseum?',
+    options: [
+      'a) Wood and grass',
+      'b) Stone, brick and sand',
+      'c) Glass and metal',
+      'd) Mud and straw'
+    ],
+    correctAnswer: 'b) Stone, brick and sand',
+    explanation: 'The text states: "...workers used stone, brick and sand to make its thick walls."',
+    hint: 'Look at what materials were used for its thick walls.'
   },
   {
     id: 130,
@@ -1641,45 +1700,50 @@ export const MOCK_SAT_QUESTIONS_SET_B: SATQuestion[] = [
     category: 'reading',
     part: 4,
     points: 1,
-    question: 'Which heading best matches this sentence: "Workers used stone, brick and sand to make its thick walls"?',
-    options: ['Building Materials', 'Public Transport Guide', 'Modern Ticket Prices', 'Famous Italian Food'],
-    correctAnswer: 'Building Materials',
-    explanation: 'Stone, brick, and sand describe the building materials used to make the walls.',
-    hint: 'What category do stone, brick, and sand belong to?'
+    question: '5. Which heading best matches this sentence: "You can travel there by bus or by metro"?',
+    options: [
+      'a) Location',
+      'b) Historical facts',
+      'c) Travel information',
+      'd) Opinions'
+    ],
+    correctAnswer: 'c) Travel information',
+    explanation: 'Guidance on transportation (buses, trains, tickets) belongs to "Travel information".',
+    hint: 'Explains how tourists get there.'
   },
   {
     id: 131,
     number: 31,
     category: 'reading',
     part: 4,
-    points: 2,
-    question: 'Find one FACT and one OPINION from the text about the Colosseum. (2 points)',
+    points: 3,
+    question: '7. According to the text, how do we travel to the Colosseum? (3 points)',
     options: [
-      'FACT: Rome is the capital city of Italy. | OPINION: In my opinion, it is the most spectacular building in Rome.',
-      'FACT: Gladiators were very friendly fighters. | OPINION: The Colosseum is located in Rome.',
-      'FACT: Earthquakes are exciting to experience. | OPINION: Workers used stone, brick and sand.',
-      'FACT: Everyone loves riding city buses. | OPINION: Over six million people visit every year.'
+      'You can travel there by bus or by metro.',
+      'You can only travel there by helicopter.',
+      'You must walk on foot from Paris.',
+      'You can travel there by camel or boat.'
     ],
-    correctAnswer: 'FACT: Rome is the capital city of Italy. | OPINION: In my opinion, it is the most spectacular building in Rome.',
-    explanation: 'Facts can be proven true ("Rome is the capital city of Italy"). Opinions represent personal feelings ("In my opinion, it is the most spectacular building in Rome").',
-    hint: 'Look for the sentence starting with "In my opinion" for the personal view.'
+    correctAnswer: 'You can travel there by bus or by metro.',
+    explanation: 'The text directly states: "You can travel there by bus or by metro, and it is a good idea to buy your ticket online to save time."',
+    hint: 'Look for the two public transportation methods named in paragraph 2.'
   },
   {
     id: 132,
     number: 32,
     category: 'reading',
     part: 4,
-    points: 3,
-    question: 'According to the text, what two public transport options can visitors use to travel to the Colosseum, and what advice is given about tickets? (3 points)',
+    points: 2,
+    question: '6. Find one FACT and one OPINION from the text about the Colosseum. (2 points)',
     options: [
-      'By bus or by metro, and buy tickets online to save time.',
-      'By airplane or by ship, and buy tickets at the train station.',
-      'Only by bicycle, and collect tickets from the gladiators.',
-      'On horseback, and enter without any tickets.'
+      'FACT: Workers used stone, brick and sand. | OPINION: In my opinion, it is the most spectacular building in Rome.',
+      'FACT: Standing inside it feels nice. | OPINION: Rome is in Italy.',
+      'FACT: Gladiators were very cool. | OPINION: It was built 2,000 years ago.',
+      'FACT: People love holidays. | OPINION: Over 50,000 people could sit inside.'
     ],
-    correctAnswer: 'By bus or by metro, and buy tickets online to save time.',
-    explanation: 'The passage says: "You can travel there by bus or by metro, and it is a good idea to buy your ticket online to save time."',
-    hint: 'Find the two transport vehicles mentioned in paragraph 2.'
+    correctAnswer: 'FACT: Workers used stone, brick and sand. | OPINION: In my opinion, it is the most spectacular building in Rome.',
+    explanation: 'Facts are provable truths (materials, numbers, dates). Opinions express subjective thoughts/feelings ("In my opinion, it is the most spectacular...").',
+    hint: 'Look for phrases that state historical facts vs phrases with "In my opinion".'
   },
 
   // --- PART 5: WRITING (15 Points) ---
@@ -1689,10 +1753,10 @@ export const MOCK_SAT_QUESTIONS_SET_B: SATQuestion[] = [
     category: 'writing',
     part: 5,
     points: 15,
-    question: 'Part 5: My Dream Home or Eco-House Paragraph (40–60 Words)',
+    question: 'Part 5: My Dream Home Paragraph (40–60 Words)',
     correctAnswer: 'Architect paragraph written using Unit 3 adjectives, infinitives of purpose, and materials.',
-    explanation: 'Write a short 40–60 word paragraph answering 5 simple steps: home type, location, materials, purpose feature with "to + verb", and feeling adjectives (cosy, spacious, comfortable).',
-    hint: 'Follow the 5 steps: 1. Kind & Where, 2. Materials, 3. "to + verb", 4. Special rooms/features, 5. Feelings!'
+    explanation: 'Write a 40–60 word paragraph answering 5 simple steps: home type, location, materials, eco-feature with "to + verb", and feeling adjectives (cosy, spacious, comfortable).',
+    hint: 'Follow the 5 simple steps: 1. Home & location, 2. Materials, 3. "to + verb" (to make electricity), 4. Inside features, 5. Why you love it!'
   }
 ];
 
