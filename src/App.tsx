@@ -9,11 +9,22 @@ import ProgressTracker from './components/ProgressTracker';
 import DreamHomeLab from './components/DreamHomeLab';
 import UnitSummaryGuide from './components/UnitSummaryGuide';
 import LiteratureStudy from './components/LiteratureStudy';
-import { StudentProgress, ClassroomScores, DreamHomeProjectData } from './types';
-import { STORIES, FLASHCARDS, MOCK_SAT_QUESTIONS } from './data/reviewData';
+import AnimatedMasteryBar from './components/AnimatedMasteryBar';
+import { StudentProgress, ClassroomScores, FoodProjectData } from './types';
+import { FLASHCARDS, MOCK_SAT_QUESTIONS } from './data/reviewData';
 import { sound } from './components/SoundManager';
-import { humanVoice, isAbortError } from './utils/humanVoice';
-import { BookOpen, Sparkles, Award, Volume2, Layers, CheckCircle2, ChevronRight, X, Heart, ShieldCheck, HelpCircle, Home, Compass, Send, Check, Play, RefreshCw, GraduationCap, Bookmark } from 'lucide-react';
+import { 
+  BookOpen, 
+  Sparkles, 
+  Award, 
+  CheckCircle2, 
+  ChevronRight, 
+  X, 
+  GraduationCap, 
+  Play, 
+  Bookmark,
+  Package
+} from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
 const INITIAL_PROGRESS: StudentProgress = {
@@ -39,9 +50,9 @@ export default function App() {
   const [isHeaderCollapsed, setIsHeaderCollapsed] = useState<boolean>(false);
   const [showProgressModal, setShowProgressModal] = useState<boolean>(false);
 
-  // Student progress state with Unit 3 LocalStorage persistence (with fallback)
+  // Student progress state with LocalStorage persistence
   const [progress, setProgress] = useState<StudentProgress>(() => {
-    const saved = localStorage.getItem('sdit_auliya_unit3_progress') || localStorage.getItem('sdit_auliya_unit2_progress');
+    const saved = localStorage.getItem('sdit_auliya_unit4_progress') || localStorage.getItem('sdit_auliya_unit3_progress');
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
@@ -58,7 +69,7 @@ export default function App() {
 
   // Team scores state with LocalStorage persistence
   const [teamScores, setTeamScores] = useState<ClassroomScores>(() => {
-    const saved = localStorage.getItem('sdit_auliya_unit3_scores') || localStorage.getItem('sdit_auliya_unit2_scores');
+    const saved = localStorage.getItem('sdit_auliya_unit4_scores') || localStorage.getItem('sdit_auliya_unit3_scores');
     if (saved) {
       try {
         return JSON.parse(saved);
@@ -69,57 +80,55 @@ export default function App() {
     return INITIAL_SCORES;
   });
 
-  // Dream Home Architecture Project State
-  const [dreamHomeData, setDreamHomeData] = useState<DreamHomeProjectData>(() => {
-    const saved = localStorage.getItem('sdit_auliya_unit3_dreamhome') || localStorage.getItem('sdit_auliya_shuttle_data');
+  // Food Origin Project Data State (Lesson 4.6 Project Challenge)
+  const [foodProjectData, setFoodProjectData] = useState<FoodProjectData>(() => {
+    const saved = localStorage.getItem('sdit_auliya_unit4_food');
     if (saved) {
       try {
-        const parsed = JSON.parse(saved);
-        if (parsed && parsed.homeName) {
-          return parsed;
-        }
+        return JSON.parse(saved);
       } catch (e) {
-        console.error('Failed to parse dream home data', e);
+        console.error('Failed to parse food project data', e);
       }
     }
     return {
-      homeName: 'The Emerald Haven',
-      homeType: 'Eco-House on a Hill',
-      style: 'Sustainable Modern Vernacular',
-      location: 'On a peaceful green hill overlooking river meadows',
-      materials: ['Local stone & mud', 'Recycled timber', 'Clay roof tiles', 'Double-glazed glass'],
-      adjectives: ['spacious', 'cosy', 'eco-friendly', 'peaceful'],
-      specialFeatures: [
-        'Rooftop solar panels to generate clean electricity',
-        'Rainwater tub outside to collect water for the garden',
-        'Grass turf on the roof to keep rooms warm in winter',
-        'Round porthole front door painted green with a shiny brass knob'
-      ],
-      rooms: {
-        bedrooms: 3,
-        bathrooms: 2,
-        functionalRooms: ['Study & Library', 'Food Pantry with coat pegs', 'Sunlit Dining Room']
+      foodName: 'Golden Sunrise Orange Juice',
+      foodType: 'Fresh Citrus Drink',
+      originCountry: 'Indonesia (West Java Groves)',
+      climateNeeded: 'Warm tropical sunshine with plenty of rain',
+      growthType: 'On a tree',
+      ingredients: ['Freshly squeezed oranges', 'A little natural honey', 'Filtered spring water', 'Vitamin C'],
+      sensoryAdjectives: {
+        sight: 'bright vivid orange with fresh pulp',
+        touch: 'cool and smooth carton packaging',
+        smell: 'fragrant, sweet, and zesty citrus aroma',
+        taste: 'sweet, tangy, and refreshingly juicy',
+        sound: 'refreshing gentle splash when poured'
       },
-      landWidth: 20,
-      landLength: 30,
-      visitorImpression: 'A warm, welcoming sanctuary where guests feel relaxed and deeply peaceful.',
-      whyLove: 'It protects the environment while providing maximum comfort and light for my family.'
+      processSteps: {
+        step1: 'First, ripe juicy oranges are picked by farmers from orchard trees.',
+        step2: 'Then, the oranges are washed in fresh water and squeezed in clean pressers.',
+        step3: 'A little natural honey is mixed in to give smooth sweetness.',
+        step4: 'Finally, the fresh juice is poured into recyclable paper cartons and cooled.'
+      },
+      packagingDescription: 'Eco-friendly cardboard carton with bright orange illustrations and nutrition facts.',
+      healthFunFact: 'Contains 100% of your daily Vitamin C requirement in every cold glass!',
+      whyILoveIt: 'It tastes deliciously sweet and juicy, giving me lots of energy for school sports.'
     };
   });
 
   useEffect(() => {
-    localStorage.setItem('sdit_auliya_unit3_progress', JSON.stringify(progress));
+    localStorage.setItem('sdit_auliya_unit4_progress', JSON.stringify(progress));
   }, [progress]);
 
   useEffect(() => {
-    localStorage.setItem('sdit_auliya_unit3_scores', JSON.stringify(teamScores));
+    localStorage.setItem('sdit_auliya_unit4_scores', JSON.stringify(teamScores));
   }, [teamScores]);
 
   useEffect(() => {
-    localStorage.setItem('sdit_auliya_unit3_dreamhome', JSON.stringify(dreamHomeData));
-  }, [dreamHomeData]);
+    localStorage.setItem('sdit_auliya_unit4_food', JSON.stringify(foodProjectData));
+  }, [foodProjectData]);
 
-  // Calculate comprehensive mastery percentage across Unit 3 activities (Vocab, Grammar, Mock SAT, Games)
+  // Calculate comprehensive mastery percentage across Unit 4 activities (Vocab, Grammar, Mock SAT, Games)
   const totalVocab = FLASHCARDS.length;
   const vocabReviewedCount = progress.vocabReviewed?.length || 0;
   const vocabScore = totalVocab > 0 ? (vocabReviewedCount / totalVocab) * 25 : 0;
@@ -132,7 +141,6 @@ export default function App() {
   const gamesScore = Math.min(progress.gamesPlayed.length * 5, 15);
   const masteryPercentage = Math.min(100, Math.round(vocabScore + examScore + grammarScore + gamesScore));
 
-  // Handler to toggle vocabulary review status
   const handleMarkVocabReviewed = (id: string, mastered: boolean) => {
     setProgress(prev => {
       const current = prev.vocabReviewed || [];
@@ -143,7 +151,6 @@ export default function App() {
     });
   };
 
-  // Handler for updating grammar category accuracy
   const handleUpdateGrammarAccuracy = (category: string, accuracy: number) => {
     setProgress(prev => ({
       ...prev,
@@ -154,7 +161,6 @@ export default function App() {
     }));
   };
 
-  // Handler for saving mock exam results
   const handleSaveMockScore = (score: number) => {
     setProgress(prev => ({
       ...prev,
@@ -163,7 +169,6 @@ export default function App() {
     }));
   };
 
-  // Handler for logging game completion
   const handleGamePlayed = (gameKey: string) => {
     setProgress(prev => ({
       ...prev,
@@ -171,13 +176,12 @@ export default function App() {
     }));
   };
 
-  // Handler to wipe all progress
   const handleResetProgress = () => {
     setProgress(INITIAL_PROGRESS);
     setTeamScores(INITIAL_SCORES);
-    localStorage.removeItem('sdit_auliya_unit3_progress');
-    localStorage.removeItem('sdit_auliya_unit3_scores');
-    localStorage.removeItem('sdit_auliya_unit3_dreamhome');
+    localStorage.removeItem('sdit_auliya_unit4_progress');
+    localStorage.removeItem('sdit_auliya_unit4_scores');
+    localStorage.removeItem('sdit_auliya_unit4_food');
   };
 
   return (
@@ -201,7 +205,7 @@ export default function App() {
       {/* Main View Area */}
       <main className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8">
         
-        {/* Gen Alpha Slang Mode Alert Banner */}
+        {/* Aura Slang Mode Alert Banner */}
         {genAlphaMode && (
           <motion.div
             initial={{ opacity: 0, y: -10 }}
@@ -209,13 +213,13 @@ export default function App() {
             className="mb-6 p-4 rounded-2xl bg-[#560e51] text-white border-3 border-[#78c222] shadow-[4px_4px_0px_0px_#78c222] flex items-center justify-between gap-3"
           >
             <div className="flex items-center gap-3">
-              <span className="text-2xl">⚡</span>
+              <span className="text-2xl">⚡🍫</span>
               <div>
                 <p className="text-xs font-black uppercase font-mono text-[#78c222] tracking-wider">
-                  MASTER ARCHITECT AURA MODE ACTIVE! (+9999 Aura)
+                  MASTER GOURMET & CHOCOLATE AURA MODE ACTIVE! (+9999 Aura)
                 </p>
                 <p className="text-xs font-bold text-fuchsia-100">
-                  Vocabulary and grammar explained with certified builder slang, eco-rizz definitions, and gigachad hobbit comfort lore!
+                  Unit 4 Food vocabulary and process passives explained with certified gourmet slang, bean-to-bar rizz, and Willy Wonka factory lore!
                 </p>
               </div>
             </div>
@@ -242,19 +246,18 @@ export default function App() {
               <div className="space-y-3 text-center md:text-left max-w-2xl">
                 <div className="flex flex-wrap gap-2 justify-center md:justify-start">
                   <span className="text-xs font-black uppercase tracking-widest text-[#560e51] font-mono bg-[#fdf2fe] px-4 py-1.5 rounded-full border-2 border-[#560e51] inline-block shadow-[2px_2px_0px_0px_#560e51]">
-                    Grade 4 ESL · Unit 3: Homes
+                    Grade 4 ESL · Unit 4: Food
                   </span>
                   <span className="text-xs font-black uppercase tracking-widest text-[#43780a] font-mono bg-lime-100 px-3.5 py-1.5 rounded-full border-2 border-lime-500 inline-block shadow-[2px_2px_0px_0px_#43780a]">
-                    ESL PS Exam Ready 📝
+                    SDIT Auliya Summative Exam Ready 📝
                   </span>
                 </div>
                 <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-slate-950 uppercase tracking-tight leading-tight">
-                  Homes Around the World 🏡✨
+                  Food Around the World & Chocolate Science 🍊🍫
                 </h2>
                 <p className="text-sm sm:text-base font-bold text-slate-700 leading-relaxed">
-                  Welcome to the Cambridge Primary ESL Grade 4 review terminal for <strong>Unit 3: Homes</strong>! 
-                  
-                  Explore global homes, sustainable eco-houses with solar panels, unusual architecture, ancient monuments like the Colosseum, and Bilbo Baggins' cosy hobbit-hole at Bag End.
+                  Welcome to the Cambridge Primary ESL Grade 4 review terminal for <strong>Unit 4: Food</strong>! 
+                  Discover global breakfasts, explore how plants grow, trace chocolate from bean to bar with passive voice, read sensory fruit poems, and dive into Roald Dahl's <em>Charlie and the Chocolate Factory</em>.
                 </p>
                 <div className="flex flex-wrap gap-3 pt-2 justify-center md:justify-start">
                   <button
@@ -264,7 +267,7 @@ export default function App() {
                     }}
                     className="px-6 py-3 bg-[#78c222] hover:bg-[#68ab1c] text-[#560e51] font-black text-xs sm:text-sm uppercase tracking-wide rounded-xl border-2 border-[#560e51] shadow-[3px_3px_0px_0px_#560e51] cursor-pointer flex items-center gap-2"
                   >
-                    <Award className="h-4 w-4" /> Start 50-Mark Mock Exam 📝
+                    <Award className="h-4 w-4" /> Start 50-Mark Summative Exam 📝
                   </button>
                   <button
                     onClick={() => {
@@ -278,12 +281,18 @@ export default function App() {
                 </div>
               </div>
 
-              {/* Stats Card */}
+              {/* Stats Card with Integrated Animated Mastery Bar */}
               <div className="w-full md:w-80 bg-[#fefaf0] border-3 border-[#560e51] p-5 rounded-2xl shadow-[4px_4px_0px_0px_#560e51] space-y-3 shrink-0">
                 <div className="flex justify-between items-center border-b-2 border-[#560e51]/20 pb-2">
                   <span className="text-xs font-black uppercase font-mono text-[#560e51]">Overall Unit Mastery</span>
                   <span className="text-lg font-black font-mono text-[#9b2c98]">{masteryPercentage}%</span>
                 </div>
+                
+                {/* Embedded Animated Mastery Bar inside the Stats Card */}
+                <div className="py-0.5">
+                  <AnimatedMasteryBar masteryPercentage={masteryPercentage} barWidthClass="w-full" showLabel={false} />
+                </div>
+
                 <div className="space-y-2 text-xs font-bold text-slate-800">
                   <div className="flex justify-between">
                     <span>Vocab Mastered:</span>
@@ -292,7 +301,7 @@ export default function App() {
                   <div className="flex justify-between">
                     <span>Summative Exam:</span>
                     <span className="font-mono font-black text-[#560e51]">
-                      {progress.mockExamCompleted ? `${progress.mockExamScore} / 50 Marks` : 'Not Taken'}
+                      {progress.mockExamCompleted ? `${progress.mockExamScore} / 50 Marks` : 'Pending'}
                     </span>
                   </div>
                   <div className="flex justify-between">
@@ -303,14 +312,14 @@ export default function App() {
                 <div className="pt-2 border-t-2 border-[#560e51]/20">
                   <span className="text-[10px] uppercase font-mono font-black text-[#9b2c98] block">CLASSROOM SCOREBOARD:</span>
                   <div className="flex justify-between mt-1 text-xs font-black">
-                    <span className="text-emerald-700">Team A (Architects): {teamScores.teamA} pts</span>
-                    <span className="text-indigo-700">Team B (Builders): {teamScores.teamB} pts</span>
+                    <span className="text-emerald-700">Team A: {teamScores.teamA} pts</span>
+                    <span className="text-indigo-700">Team B: {teamScores.teamB} pts</span>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* UNIT 3 SUMMARY & ESL PS TEST GUIDE COMPONENT */}
+            {/* UNIT 4 CURRICULUM BLUEPRINT & EXAM MATRIX */}
             <UnitSummaryGuide
               onNavigateTab={(tab) => {
                 setActiveTab(tab);
@@ -334,10 +343,10 @@ export default function App() {
                   <div className="w-12 h-12 bg-fuchsia-100 rounded-2xl flex items-center justify-center border-2 border-[#560e51] shadow-[2px_2px_0px_0px_#560e51] mb-3">
                     <BookOpen className="h-6 w-6 text-[#9b2c98]" />
                   </div>
-                  <span className="text-[10px] font-mono font-black uppercase text-[#9b2c98]">Lessons 3.1 – 3.5</span>
-                  <h3 className="text-xl font-black text-[#560e51] uppercase tracking-tight">Vocab & Homes Deck 🏡</h3>
+                  <span className="text-[10px] font-mono font-black uppercase text-[#9b2c98]">Lessons 4.1 – 4.5</span>
+                  <h3 className="text-xl font-black text-[#560e51] uppercase tracking-tight">Food Vocab & Growth Deck 🍳</h3>
                   <p className="text-xs font-bold text-slate-600 leading-relaxed mt-1">
-                    Types of homes (yurt, bungalow, stilt house), eco-materials (solar panels, timber), strange buildings, and Tolkien's hobbit-hole vocabulary.
+                    Breakfast foods, plant growth locations (trees, plants, underground), cacao terms, sensory adjectives, and Wonka vocabulary!
                   </p>
                 </div>
                 <span className="text-xs font-black text-[#560e51] uppercase flex items-center gap-1 font-mono pt-2">
@@ -357,10 +366,10 @@ export default function App() {
                   <div className="w-12 h-12 bg-lime-100 rounded-2xl flex items-center justify-center border-2 border-[#560e51] shadow-[2px_2px_0px_0px_#560e51] mb-3">
                     <CheckCircle2 className="h-6 w-6 text-[#43780a]" />
                   </div>
-                  <span className="text-[10px] font-mono font-black uppercase text-[#43780a]">Workbook Grammar</span>
+                  <span className="text-[10px] font-mono font-black uppercase text-[#43780a]">Lessons 4.1 – 4.3</span>
                   <h3 className="text-xl font-black text-[#560e51] uppercase tracking-tight">Grammar Labs ⚙️</h3>
                   <p className="text-xs font-bold text-slate-600 leading-relaxed mt-1">
-                    Master Infinitives of Purpose ("to + verb"), Modals of Possibility (must, might, could, can't), and Fact vs. Opinion statements!
+                    Master Some & Any, Quantifiers (a lot of, plenty of, few/little), Process Passives (is/are + V3), and Time Connectives!
                   </p>
                 </div>
                 <span className="text-xs font-black text-[#560e51] uppercase flex items-center gap-1 font-mono pt-2">
@@ -368,7 +377,7 @@ export default function App() {
                 </span>
               </div>
 
-              {/* Card 3: Literature Study (Lesson 3.5: The Hobbit) */}
+              {/* Card 3: Literature Study (Lesson 4.5) */}
               <div 
                 onClick={() => {
                   setActiveTab('literature');
@@ -380,37 +389,37 @@ export default function App() {
                   <div className="w-12 h-12 bg-purple-100 rounded-2xl flex items-center justify-center border-2 border-[#560e51] shadow-[2px_2px_0px_0px_#560e51] mb-3">
                     <Bookmark className="h-6 w-6 text-purple-700" />
                   </div>
-                  <span className="text-[10px] font-mono font-black uppercase text-purple-700">Lesson 3.5 Classic</span>
-                  <h3 className="text-xl font-black text-[#560e51] uppercase tracking-tight mt-1">Literature Study 📖</h3>
+                  <span className="text-[10px] font-mono font-black uppercase text-purple-700">Lesson 4.5 Classic</span>
+                  <h3 className="text-xl font-black text-[#560e51] uppercase tracking-tight mt-1">Charlie & Factory 🍫</h3>
                   <p className="text-xs font-bold text-slate-600 leading-relaxed mt-1">
-                    J.R.R. Tolkien's The Hobbit (Bag End), key literature vocabulary (porthole, pantries, pegs, cellars, respectable), audio reader, and Qur'anic sanctuary reflection!
+                    Roald Dahl's classic story, Willy Wonka's churning chocolate waterfall, edible swudge grass, Augustus Gloop's accident, and generosity values!
                   </p>
                 </div>
                 <span className="text-xs font-black text-[#560e51] uppercase flex items-center gap-1 font-mono pt-2">
-                  Open Literature Lounge <ChevronRight className="h-4 w-4" />
+                  Open Wonka Lounge <ChevronRight className="h-4 w-4" />
                 </span>
               </div>
 
-              {/* Card 4: Dream Home Blueprint Project */}
+              {/* Card 4: Food Origin & Packaging Studio */}
               <div 
                 onClick={() => {
-                  setActiveTab('dream-home');
+                  setActiveTab('food-origin');
                   sound.playClick();
                 }}
                 className="bg-white hover:bg-amber-50/50 p-6 rounded-[28px] border-4 border-[#560e51] shadow-[6px_6px_0px_0px_#560e51] cursor-pointer transition-all hover:translate-y-[-2px] space-y-3 flex flex-col justify-between"
               >
                 <div>
                   <div className="w-12 h-12 bg-amber-100 rounded-2xl flex items-center justify-center border-2 border-[#560e51] shadow-[2px_2px_0px_0px_#560e51] mb-3">
-                    <Home className="h-6 w-6 text-amber-700" />
+                    <Package className="h-6 w-6 text-amber-700" />
                   </div>
-                  <span className="text-[10px] font-mono font-black uppercase text-amber-800">Lesson 3.6 Project</span>
-                  <h3 className="text-xl font-black text-[#560e51] uppercase tracking-tight">Dream Home Lab 📐</h3>
+                  <span className="text-[10px] font-mono font-black uppercase text-amber-800">Lesson 4.6 Project</span>
+                  <h3 className="text-xl font-black text-[#560e51] uppercase tracking-tight">Food Origin Lab 🍊</h3>
                   <p className="text-xs font-bold text-slate-600 leading-relaxed mt-1">
-                    Design your dream eco-house blueprint, select materials, configure purpose clauses, and generate your spoken architect presentation!
+                    Design custom food packaging, trace agricultural origins, write manufacturing sentences, and generate your spoken product pitch!
                   </p>
                 </div>
                 <span className="text-xs font-black text-[#560e51] uppercase flex items-center gap-1 font-mono pt-2">
-                  Launch Architecture Lab <ChevronRight className="h-4 w-4" />
+                  Launch Food Studio <ChevronRight className="h-4 w-4" />
                 </span>
               </div>
 
@@ -429,7 +438,7 @@ export default function App() {
                   <span className="text-[10px] font-mono font-black uppercase text-sky-700">Team Arcade</span>
                   <h3 className="text-xl font-black text-[#560e51] uppercase tracking-tight">Classroom Games 🎮</h3>
                   <p className="text-xs font-bold text-slate-600 leading-relaxed mt-1">
-                    Play Spin the Wheel, True/False Showdown, Kahoot Arena, Hot Seat, and Odd One Out in Team mode!
+                    Play Mystery Food Clues, Bean to Bar Process Sorter, Rapid Fire Quantifier Buzzer, and Wonka Trivia in Team mode!
                   </p>
                 </div>
                 <span className="text-xs font-black text-[#560e51] uppercase flex items-center gap-1 font-mono pt-2">
@@ -437,32 +446,7 @@ export default function App() {
                 </span>
               </div>
 
-              {/* Card 6: Spelling Bee Arena (Teacher Only) */}
-              {isTeacherMode && (
-                <div 
-                  onClick={() => {
-                    setActiveTab('spelling-bee');
-                    sound.playClick();
-                  }}
-                  className="bg-white hover:bg-lime-50/50 p-6 rounded-[28px] border-4 border-[#560e51] shadow-[6px_6px_0px_0px_#560e51] cursor-pointer transition-all hover:translate-y-[-2px] space-y-3 flex flex-col justify-between"
-                >
-                  <div>
-                    <div className="w-12 h-12 bg-lime-100 rounded-2xl flex items-center justify-center border-2 border-[#560e51] shadow-[2px_2px_0px_0px_#560e51] mb-3">
-                      <Sparkles className="h-6 w-6 text-[#560e51]" />
-                    </div>
-                    <span className="text-[10px] font-mono font-black uppercase text-[#78c222] bg-[#560e51] px-2 py-0.5 rounded">Teacher Arena</span>
-                    <h3 className="text-xl font-black text-[#560e51] uppercase tracking-tight mt-1">Spelling Bee Arena 🐝</h3>
-                    <p className="text-xs font-bold text-slate-600 leading-relaxed mt-1">
-                      Run class auditions and launch the Grand Final Championship stage with live pronouncer, stage timer, and 24 Unit 3 contest words!
-                    </p>
-                  </div>
-                  <span className="text-xs font-black text-[#560e51] uppercase flex items-center gap-1 font-mono pt-2">
-                    Enter Contest Arena <ChevronRight className="h-4 w-4" />
-                  </span>
-                </div>
-              )}
-
-              {/* Card 7: Mock Assessment */}
+              {/* Card 6: Summative Assessment */}
               <div 
                 onClick={() => {
                   setActiveTab('mock-sat');
@@ -474,14 +458,14 @@ export default function App() {
                   <div className="w-12 h-12 bg-rose-100 rounded-2xl flex items-center justify-center border-2 border-[#560e51] shadow-[2px_2px_0px_0px_#560e51] mb-3">
                     <Award className="h-6 w-6 text-rose-700" />
                   </div>
-                  <span className="text-[10px] font-mono font-black uppercase text-rose-700">Summative Exam (50m)</span>
-                  <h3 className="text-xl font-black text-[#560e51] uppercase tracking-tight mt-1">Mock Assessment 📝</h3>
+                  <span className="text-[10px] font-mono font-black uppercase text-rose-700">Official 50 Marks</span>
+                  <h3 className="text-xl font-black text-[#560e51] uppercase tracking-tight mt-1">Summative Exam 📝</h3>
                   <p className="text-xs font-bold text-slate-600 leading-relaxed mt-1">
-                    Full 30-question, 50-mark exam simulation: Part 1 Listening (Homes audio), Part 2 Anagrams, Part 3 Grammar, Part 4 Colosseum Reading, and Part 5 Writing!
+                    Official 50-mark SDIT Auliya exam replica: Part 1 Listening (Mung bean sprouts), Part 2 Vocab & Anagrams, Part 3 Grammar, Part 4 Cocoa Reading, and Part 5 Writing!
                   </p>
                 </div>
                 <span className="text-xs font-black text-[#560e51] uppercase flex items-center gap-1 font-mono pt-2">
-                  Open Assessment Terminal <ChevronRight className="h-4 w-4" />
+                  Open Exam Terminal <ChevronRight className="h-4 w-4" />
                 </span>
               </div>
 
@@ -529,7 +513,7 @@ export default function App() {
             </motion.div>
           )}
 
-          {/* TAB 3: LITERATURE STUDY (LESSON 3.5) */}
+          {/* TAB 3: LITERATURE STUDY (LESSON 4.5) */}
           {activeTab === 'literature' && (
             <motion.div
               key="view-literature"
@@ -548,24 +532,24 @@ export default function App() {
             </motion.div>
           )}
 
-          {/* TAB 4: DREAM HOME BLUEPRINT PROJECT */}
-          {(activeTab === 'dream-home' || activeTab === 'shuttle-lab') && (
+          {/* TAB 4: FOOD ORIGIN LAB (LESSON 4.6) */}
+          {(activeTab === 'food-origin' || activeTab === 'dream-home') && (
             <motion.div
-              key="view-dream-home"
+              key="view-food-origin"
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.15 }}
             >
               <DreamHomeLab
-                initialData={dreamHomeData}
-                onSave={(data) => setDreamHomeData(data)}
+                initialData={foodProjectData}
+                onSave={(data) => setFoodProjectData(data)}
                 genAlphaMode={genAlphaMode}
               />
             </motion.div>
           )}
 
-          {/* TAB 4: CLASSROOM GAMES */}
+          {/* TAB 5: CLASSROOM GAMES */}
           {activeTab === 'arcade' && (
             <motion.div
               key="view-games"
@@ -584,7 +568,7 @@ export default function App() {
             </motion.div>
           )}
 
-          {/* TAB 5: SPELLING BEE (TEACHER ACCESS ONLY) */}
+          {/* TAB 6: SPELLING BEE (TEACHER ACCESS ONLY) */}
           {activeTab === 'spelling-bee' && (
             <motion.div
               key="spelling-bee"
@@ -599,32 +583,17 @@ export default function App() {
                   genAlphaMode={genAlphaMode}
                 />
               ) : (
-                <div className="max-w-md mx-auto p-8 bg-white border-4 border-[#560e51] rounded-[32px] shadow-[8px_8px_0px_0px_#560e51] text-center space-y-4">
-                  <div className="w-16 h-16 bg-amber-100 rounded-2xl flex items-center justify-center mx-auto border-2 border-[#560e51] shadow-[2px_2px_0px_0px_#560e51]">
-                    <Sparkles className="h-8 w-8 text-[#560e51]" />
-                  </div>
-                  <h3 className="text-xl font-black text-[#560e51] uppercase tracking-tight">Teacher Mode Required</h3>
-                  <p className="text-xs font-bold text-slate-700 leading-relaxed">
-                    The Spelling Bee Championship & Auditions console is reserved for teachers. Switch to <strong>Teacher Mode</strong> in the header bar to launch the tournament.
-                  </p>
-                  <button
-                    onClick={() => {
-                      setIsTeacherMode(true);
-                      sound.playClick();
-                    }}
-                    className="w-full py-3 bg-[#9b2c98] text-white font-black rounded-xl border-2 border-[#560e51] text-xs uppercase shadow-[2px_2px_0px_0px_#560e51] cursor-pointer"
-                  >
-                    Switch to Teacher Mode 👨‍🏫
-                  </button>
+                <div className="text-center py-12">
+                  <p className="text-sm font-bold text-slate-500">Teacher mode required to access Spelling Bee.</p>
                 </div>
               )}
             </motion.div>
           )}
 
-          {/* TAB 6: MOCK ASSESSMENT */}
+          {/* TAB 7: SUMMATIVE ASSESSMENT */}
           {activeTab === 'mock-sat' && (
             <motion.div
-              key="view-sat"
+              key="view-mock-sat"
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
@@ -643,7 +612,7 @@ export default function App() {
 
       </main>
 
-      {/* Progress & Stamps Modal */}
+      {/* Progress & Stamps Modal with AnimatedMasteryBar */}
       <AnimatePresence>
         {showProgressModal && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
@@ -651,7 +620,7 @@ export default function App() {
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
-              className="bg-white rounded-[32px] border-4 border-[#560e51] shadow-[8px_8px_0px_0px_#560e51] p-6 max-w-md w-full relative"
+              className="bg-white rounded-[32px] border-4 border-[#560e51] shadow-[8px_8px_0px_0px_#560e51] p-6 max-w-lg w-full relative"
             >
               <div className="flex justify-between items-center pb-3 border-b-2 border-fuchsia-100 mb-4">
                 <div className="flex items-center gap-2">
@@ -671,6 +640,7 @@ export default function App() {
                 onResetProgress={handleResetProgress}
                 isTeacherMode={isTeacherMode}
                 teamScores={teamScores}
+                masteryPercentage={masteryPercentage}
               />
             </motion.div>
           </div>
@@ -679,7 +649,7 @@ export default function App() {
 
       {/* Footer */}
       <footer className="w-full border-t-2 border-[#560e51]/20 bg-white py-4 px-6 mt-12 text-center text-xs text-[#560e51] font-bold">
-        <p>Grade 4 ESL · Unit 3: Homes · Cambridge Primary English Review Suite (SDIT Auliya)</p>
+        <p>Grade 4 ESL · Unit 4: Food · Cambridge Primary English Review Suite (SDIT Auliya)</p>
       </footer>
 
     </div>

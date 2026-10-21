@@ -16,752 +16,710 @@ export default function GrammarPractice({
   isTeacherMode,
   genAlphaMode = false
 }: GrammarPracticeProps) {
-  const [activeSubTab, setActiveSubTab] = useState<'infinitives' | 'modals' | 'yesNoQuestions' | 'factOpinion'>('infinitives');
+  const [activeSubTab, setActiveSubTab] = useState<'someAny' | 'quantifiers' | 'passiveProcess' | 'connectives'>('someAny');
 
-  // --- 1. INFINITIVES OF PURPOSE ("to + verb") ---
-  const infinitiveQuestions = [
+  // ===========================================================================
+  // 1. SOME AND ANY (Lessons 4.1 & 4.2)
+  // ===========================================================================
+  const someAnyQuestions = [
     {
-      action: 'He used local materials',
-      context: '(build) the walls of the eco-house.',
-      verb: 'build',
-      options: ['to build', 'building', 'built', 'to builds'],
-      correct: 'to build',
-      rule: 'Infinitive of purpose = to + base verb (explains WHY he used local materials).'
+      sentence: 'There are ____________ bananas for breakfast – help yourself!',
+      options: ['some', 'any'],
+      correct: 'some',
+      rule: 'Use "some" in positive affirmative sentences with plural countable nouns.'
     },
     {
-      action: 'There are big windows',
-      context: '(let) in lots of natural light.',
-      verb: 'let',
-      options: ['to let', 'letting', 'to letting', 'for let'],
-      correct: 'to let',
-      rule: 'Use "to let" to explain the purpose of installing big windows.'
+      sentence: 'Are there ____________ onions in the omelette?',
+      options: ['some', 'any'],
+      correct: 'any',
+      rule: 'Use "any" in questions when asking if an ingredient is present.'
     },
     {
-      action: 'There are solar panels on the roof',
-      context: '(provide) clean energy for the lights.',
-      verb: 'provide',
-      options: ['to provide', 'providing', 'to provides', 'for provide'],
-      correct: 'to provide',
-      rule: 'Infinitive of purpose: "to provide" electricity and power.'
+      sentence: 'We’d like ____________ chocolate sauce on our ice creams, please.',
+      options: ['some', 'any'],
+      correct: 'some',
+      rule: 'Use "some" when making a polite request or positive statement with uncountable nouns.'
     },
     {
-      action: 'Grass grows on the roof',
-      context: '(keep) the house warm in winter.',
-      verb: 'keep',
-      options: ['to keep', 'keeping', 'to kept', 'for keep'],
-      correct: 'to keep',
-      rule: '"to keep" explains the insulation purpose of the living roof.'
+      sentence: 'Have you got ____________ cheese in the fridge?',
+      options: ['some', 'any'],
+      correct: 'any',
+      rule: 'Use "any" in questions with uncountable food items.'
     },
     {
-      action: 'He put a large tub outside',
-      context: '(collect) rainwater for his garden.',
-      verb: 'collect',
-      options: ['to collect', 'collecting', 'to collects', 'for collecting'],
-      correct: 'to collect',
-      rule: 'Action: put a tub outside &rarr; Purpose: to collect rainwater.'
+      sentence: 'I need ____________ tomatoes for the pasta sauce.',
+      options: ['some', 'any'],
+      correct: 'some',
+      rule: 'Use "some" in positive statements ("I need some tomatoes").'
     },
     {
-      action: 'Always turn off lights when leaving',
-      context: '(save) electrical power.',
-      verb: 'save',
-      options: ['to save', 'saving', 'to saves', 'for save'],
-      correct: 'to save',
-      rule: 'Purpose of turning off lights: "to save" electricity.'
+      sentence: 'We don’t have ____________ mushrooms for the pizza.',
+      options: ['some', 'any'],
+      correct: 'any',
+      rule: 'Use "any" in negative sentences with don’t / doesn’t / aren’t.'
+    },
+    {
+      sentence: 'Why isn’t there ____________ bread left for toast?',
+      options: ['some', 'any'],
+      correct: 'any',
+      rule: 'Use "any" in negative questions ("Why isn’t there any...").'
+    },
+    {
+      sentence: 'There is ____________ delicious homemade jam on the table.',
+      options: ['some', 'any'],
+      correct: 'some',
+      rule: 'Use "some" in positive sentences describing food that is available.'
     }
   ];
-  const [infIdx, setInfIdx] = useState(0);
-  const [infSelected, setInfSelected] = useState<string | null>(null);
-  const [infScore, setInfScore] = useState(0);
-  const [infCount, setInfCount] = useState(0);
+  const [someAnyIdx, setSomeAnyIdx] = useState(0);
+  const [someAnySelected, setSomeAnySelected] = useState<string | null>(null);
+  const [someAnyScore, setSomeAnyScore] = useState(0);
+  const [someAnyCount, setSomeAnyCount] = useState(0);
 
-  // --- 2. MODAL VERBS OF POSSIBILITY (can't, might, could, must) ---
-  const modalQuestions = [
+  // ===========================================================================
+  // 2. QUANTIFIERS (Lessons 4.2 & 4.3)
+  // ===========================================================================
+  const quantifierQuestions = [
     {
-      sentence: 'I am not sure what that strange building is. It ____________ be a museum.',
-      options: ['might', 'must', 'can’t'],
-      correct: 'might',
-      certainty: '50% (Uncertain possibility)',
-      rule: 'When we are not sure or guessing, we use "might" or "could".'
+      sentence: 'There aren’t ____________ crisps left in this packet.',
+      options: ['many', 'much'],
+      correct: 'many',
+      rule: 'Crisps are countable ("one crisp, two crisps"), so use "many" in negatives.'
     },
     {
-      sentence: 'Nobody lives in that building, so it ____________ be a family home.',
-      options: ['can’t', 'must', 'could'],
-      correct: 'can’t',
-      certainty: '0% (Impossible)',
-      rule: 'If nobody lives there, it is impossible (0%), so we say "it can’t be".'
+      sentence: 'Can I have ____________ vegetables with my chicken?',
+      options: ['a few', 'a little'],
+      correct: 'a few',
+      rule: '"Vegetables" is plural countable, so we use "a few".'
     },
     {
-      sentence: 'There are thousands of books on shelves inside, so it ____________ be a library!',
-      options: ['must', 'might', 'can’t'],
-      correct: 'must',
-      certainty: '100% (Certainty based on strong proof)',
-      rule: 'With clear physical evidence (thousands of books), we are sure: "it must be".'
+      sentence: 'There isn’t ____________ fruit – can you buy some at the supermarket?',
+      options: ['much', 'many'],
+      correct: 'much',
+      rule: '"Fruit" is used as an uncountable noun here, so use "much" with negative isn’t.'
     },
     {
-      sentence: 'The shoe building is much too small, so it ____________ be a supermarket.',
-      options: ['can’t', 'might', 'must'],
-      correct: 'can’t',
-      certainty: '0% (Impossible)',
-      rule: 'A tiny shoe house cannot possibly contain supermarket aisles.'
+      sentence: 'We cooked ____________ pasta for everyone at the party. Nobody is hungry!',
+      options: ['plenty of', 'a few'],
+      correct: 'plenty of',
+      rule: '"Plenty of" works with uncountable pasta and means more than enough.'
     },
     {
-      sentence: 'Look! Sarah is waving at us through the window. She ____________ be inside!',
-      options: ['must', 'can’t', 'might not'],
-      correct: 'must',
-      certainty: '100% (Certainty)',
-      rule: 'Seeing her wave proves 100% that she is inside.'
+      sentence: 'There were some sandwiches, but ____________ sweets left at the end.',
+      options: ['few', 'little'],
+      correct: 'few',
+      rule: '"Sweets" is countable plural, so we use "few" (not many).'
     },
     {
-      sentence: 'Complete the guessing question: ____________ it be an ancient school?',
-      options: ['Could', 'Does', 'Is', 'Have'],
-      correct: 'Could',
-      certainty: 'Modal question of possibility',
-      rule: 'We use modal auxiliary "Could" to ask about possibilities ("Could it be...?").'
+      sentence: 'There is only ____________ rice left in the bowl – would you like some?',
+      options: ['a little', 'a few'],
+      correct: 'a little',
+      rule: '"Rice" is an uncountable grain, so we use "a little".'
+    },
+    {
+      sentence: 'Did you know there are ____________ varieties of chocolate in the world?',
+      options: ['a lot of', 'a little'],
+      correct: 'a lot of',
+      rule: 'Varieties is countable plural, so we use "a lot of".'
     }
   ];
-  const [modIdx, setModIdx] = useState(0);
-  const [modSelected, setModSelected] = useState<string | null>(null);
-  const [modScore, setModScore] = useState(0);
-  const [modCount, setModCount] = useState(0);
+  const [quantIdx, setQuantIdx] = useState(0);
+  const [quantSelected, setQuantSelected] = useState<string | null>(null);
+  const [quantScore, setQuantScore] = useState(0);
+  const [quantCount, setQuantCount] = useState(0);
 
-  // --- 3. YES/NO QUESTIONS WITH AUXILIARY VERBS & RISING INTONATION (↑) ---
-  const questionExercises = [
+  // ===========================================================================
+  // 3. PASSIVE PROCESS (is / are + Past Participle)
+  // ===========================================================================
+  const passiveQuestions = [
     {
-      prompt: 'Ask if the strange building is made from recycled books:',
-      target: 'Is it made from books? ↑',
-      options: ['Is it made from books? ↑', 'Does it made from books? ↑', 'Have it made from books? ↑'],
-      correct: 'Is it made from books? ↑',
-      rule: 'Passive/state uses auxiliary verb "be": Is it made...?'
+      sentence: 'Chocolate ____________ from cacao beans grown on tropical trees.',
+      options: ['is made', 'are made', 'is make', 'are making'],
+      correct: 'is made',
+      rule: 'Chocolate is uncountable singular -> "is made" (make -> made).'
     },
     {
-      prompt: 'Ask if the building looks like an upside-down house:',
-      target: 'Does it look like an upside-down house? ↑',
-      options: ['Does it look like an upside-down house? ↑', 'Is it look like an upside-down house? ↑', 'Has it look like an upside-down house? ↑'],
-      correct: 'Does it look like an upside-down house? ↑',
-      rule: 'Present simple with action verb "look" uses auxiliary "Does it look...?"'
+      sentence: 'The cacao pods ____________ by plantation workers twice a year.',
+      options: ['are harvested', 'is harvested', 'harvested', 'are harvest'],
+      correct: 'are harvested',
+      rule: 'Pods is plural -> "are harvested" (harvest -> harvested).'
     },
     {
-      prompt: 'Ask if there are solar panels on the roof:',
-      target: 'Are there solar panels on the roof? ↑',
-      options: ['Are there solar panels on the roof? ↑', 'Do there solar panels on the roof? ↑', 'Is there solar panels on the roof? ↑'],
-      correct: 'Are there solar panels on the roof? ↑',
-      rule: 'Plural subject "solar panels" takes auxiliary "Are there...?"'
+      sentence: 'The cacao beans ____________ in the bright sunshine for one week.',
+      options: ['are dried', 'is dried', 'are drying', 'dried'],
+      correct: 'are dried',
+      rule: 'Beans is plural -> "are dried" (dry -> dried).'
     },
     {
-      prompt: 'Notice rising intonation in spoken English:',
-      target: 'Yes/No questions rise in pitch at the end: Is it colourful? ↑',
-      options: ['Voice goes UP at the end (Rising intonation ↑)', 'Voice drops flat like a statement', 'Voice stays completely silent'],
-      correct: 'Voice goes UP at the end (Rising intonation ↑)',
-      rule: 'In English, Yes/No questions always end with a rising intonation arrow (↑).'
+      sentence: 'In factories, the beans ____________ and crushed into a brown paste.',
+      options: ['are roasted', 'is roasted', 'roast', 'are roasting'],
+      correct: 'are roasted',
+      rule: 'Plural beans -> "are roasted and crushed".'
+    },
+    {
+      sentence: 'A little vanilla and sugar ____________ to make the chocolate sweet.',
+      options: ['is mixed in', 'are mixed in', 'mixes', 'mixing'],
+      correct: 'is mixed in',
+      rule: 'Vanilla and sugar treated as an ingredient mixture -> "is mixed in".'
+    },
+    {
+      sentence: 'Finally, the melted liquid ____________ into shiny plastic moulds.',
+      options: ['is poured', 'are poured', 'poured', 'is pour'],
+      correct: 'is poured',
+      rule: 'Liquid is uncountable singular -> "is poured".'
     }
   ];
-  const [qIdx, setQIdx] = useState(0);
-  const [qSelected, setQSelected] = useState<string | null>(null);
-  const [qScore, setQScore] = useState(0);
-  const [qCount, setQCount] = useState(0);
+  const [passiveIdx, setPassiveIdx] = useState(0);
+  const [passiveSelected, setPassiveSelected] = useState<string | null>(null);
+  const [passiveScore, setPassiveScore] = useState(0);
+  const [passiveCount, setPassiveCount] = useState(0);
 
-  // --- 4. FACT VS OPINION DETECTIVE ---
-  const factOpinionItems = [
+  // ===========================================================================
+  // 4. TIME CONNECTIVES (before, then, after that, when, finally)
+  // ===========================================================================
+  const connectiveQuestions = [
     {
-      text: 'The Colosseum was built almost 2,000 years ago from stone, brick and sand.',
-      type: 'FACT',
-      reason: 'This can be proven by historical dates, archaeological records, and physical evidence.'
+      sentence: '____________ you start planting, clean a recycled plastic container with water.',
+      options: ['Before', 'When', 'Finally', 'After'],
+      correct: 'Before',
+      rule: '"Before you start" introduces the very first preparation step.'
     },
     {
-      text: 'In my opinion, the Colosseum is the most spectacular building in Rome.',
-      type: 'OPINION',
-      reason: 'It begins with "In my opinion" and uses an emotional adjective "most spectacular".'
+      sentence: 'First put cotton in the cup. ____________, add the seeds and a little water.',
+      options: ['Then', 'Before', 'Until', 'Because'],
+      correct: 'Then',
+      rule: '"Then" indicates the immediate next action in the recipe/guide.'
     },
     {
-      text: 'More than six million visitors come every year to see the Colosseum.',
-      type: 'FACT',
-      reason: 'Recorded ticket sales provide measurable, verifiable numbers.'
+      sentence: 'Put the seeds on the cotton. ____________, place the cup in the warm sunlight.',
+      options: ['After that', 'Before', 'Since', 'Although'],
+      correct: 'After that',
+      rule: '"After that" smoothly links intermediate procedural steps.'
     },
     {
-      text: 'Standing inside the ancient ruins feels like travelling back in time.',
-      type: 'OPINION',
-      reason: 'A personal feeling that depends on individual imagination.'
+      sentence: '____________ there are green leaves on your cress plant, you can eat them!',
+      options: ['When', 'Before', 'Finally', 'So'],
+      correct: 'When',
+      rule: '"When" indicates the exact condition or time when something is ready.'
     },
     {
-      text: 'You can travel to the Colosseum by bus or by metro.',
-      type: 'FACT',
-      reason: 'Verifiable city public transit route and schedule.'
-    },
-    {
-      text: 'A yurt is the coolest and prettiest home in the entire world.',
-      type: 'OPINION',
-      reason: 'Words like "coolest" and "prettiest" express subjective personal feelings.'
+      sentence: '____________, harvest the fresh crunchy sprouts and enjoy your healthy salad!',
+      options: ['Finally', 'Before', 'When', 'While'],
+      correct: 'Finally',
+      rule: '"Finally" marks the concluding final step of the process.'
     }
   ];
-  const [foIdx, setFoIdx] = useState(0);
-  const [foSelected, setFoSelected] = useState<string | null>(null);
-  const [foScore, setFoScore] = useState(0);
-  const [foCount, setFoCount] = useState(0);
+  const [connIdx, setConnIdx] = useState(0);
+  const [connSelected, setConnSelected] = useState<string | null>(null);
+  const [connScore, setConnScore] = useState(0);
+  const [connCount, setConnCount] = useState(0);
 
-  const subTabs = [
-    { id: 'infinitives', label: '1. Infinitives of Purpose ("to + verb") 🎯' },
-    { id: 'modals', label: '2. Modals of Possibility (can\'t / might / must) 🔮' },
-    { id: 'yesNoQuestions', label: '3. Yes/No Questions (↑) 🗣️' },
-    { id: 'factOpinion', label: '4. Fact vs. Opinion Detective 🔍' }
-  ];
+  // Handler for Some/Any
+  const handleAnswerSomeAny = (opt: string) => {
+    if (someAnySelected) return;
+    setSomeAnySelected(opt);
+    const q = someAnyQuestions[someAnyIdx];
+    const isCorrect = opt === q.correct;
+    if (isCorrect) {
+      sound.playCorrect();
+      setSomeAnyScore(prev => prev + 1);
+    } else {
+      sound.playWrong();
+    }
+    const newCount = someAnyCount + 1;
+    setSomeAnyCount(newCount);
+    const accuracy = Math.round(((isCorrect ? someAnyScore + 1 : someAnyScore) / newCount) * 100);
+    onUpdateAccuracy('someAny', accuracy);
+  };
+
+  const nextSomeAny = () => {
+    setSomeAnySelected(null);
+    setSomeAnyIdx((someAnyIdx + 1) % someAnyQuestions.length);
+    sound.playClick();
+  };
+
+  // Handler for Quantifiers
+  const handleAnswerQuant = (opt: string) => {
+    if (quantSelected) return;
+    setQuantSelected(opt);
+    const q = quantifierQuestions[quantIdx];
+    const isCorrect = opt === q.correct;
+    if (isCorrect) {
+      sound.playCorrect();
+      setQuantScore(prev => prev + 1);
+    } else {
+      sound.playWrong();
+    }
+    const newCount = quantCount + 1;
+    setQuantCount(newCount);
+    const accuracy = Math.round(((isCorrect ? quantScore + 1 : quantScore) / newCount) * 100);
+    onUpdateAccuracy('quantifiers', accuracy);
+  };
+
+  const nextQuant = () => {
+    setQuantSelected(null);
+    setQuantIdx((quantIdx + 1) % quantifierQuestions.length);
+    sound.playClick();
+  };
+
+  // Handler for Passive Process
+  const handleAnswerPassive = (opt: string) => {
+    if (passiveSelected) return;
+    setPassiveSelected(opt);
+    const q = passiveQuestions[passiveIdx];
+    const isCorrect = opt === q.correct;
+    if (isCorrect) {
+      sound.playCorrect();
+      setPassiveScore(prev => prev + 1);
+    } else {
+      sound.playWrong();
+    }
+    const newCount = passiveCount + 1;
+    setPassiveCount(newCount);
+    const accuracy = Math.round(((isCorrect ? passiveScore + 1 : passiveScore) / newCount) * 100);
+    onUpdateAccuracy('passiveProcess', accuracy);
+  };
+
+  const nextPassive = () => {
+    setPassiveSelected(null);
+    setPassiveIdx((passiveIdx + 1) % passiveQuestions.length);
+    sound.playClick();
+  };
+
+  // Handler for Connectives
+  const handleAnswerConn = (opt: string) => {
+    if (connSelected) return;
+    setConnSelected(opt);
+    const q = connectiveQuestions[connIdx];
+    const isCorrect = opt === q.correct;
+    if (isCorrect) {
+      sound.playCorrect();
+      setConnScore(prev => prev + 1);
+    } else {
+      sound.playWrong();
+    }
+    const newCount = connCount + 1;
+    setConnCount(newCount);
+    const accuracy = Math.round(((isCorrect ? connScore + 1 : connScore) / newCount) * 100);
+    onUpdateAccuracy('connectives', accuracy);
+  };
+
+  const nextConn = () => {
+    setConnSelected(null);
+    setConnIdx((connIdx + 1) % connectiveQuestions.length);
+    sound.playClick();
+  };
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-4">
+    <div className="max-w-4xl mx-auto space-y-8 py-4">
       
-      {/* Intro section */}
-      <div className="text-center mb-6">
-        <h2 className="text-2xl font-black text-slate-950 flex items-center justify-center gap-2 uppercase tracking-tight">
-          <span>⚙️</span> Unit 3 Grammar & Language Labs
+      {/* Header */}
+      <div className="text-center space-y-2">
+        <h2 className="text-2xl sm:text-3xl font-black text-slate-950 uppercase tracking-tight flex items-center justify-center gap-2">
+          <span>⚙️</span> Unit 4 Grammar Interactive Labs
         </h2>
-        <p className="text-sm font-semibold text-slate-600 mt-1">
-          Master Infinitives of Purpose ("to + verb"), Modal Verbs of Possibility, Yes/No Question Intonations, and Fact vs. Opinion!
+        <p className="text-sm font-semibold text-slate-650 max-w-xl mx-auto">
+          Interactive drills targeting the exact grammar from Cambridge Primary Grade 4 Unit 4 & the SDIT Auliya Summative Assessment.
         </p>
       </div>
 
-      {/* Sub-Tab Selectors Header */}
-      <div className="bg-white p-2 rounded-2xl grid grid-cols-1 sm:grid-cols-2 lg:flex lg:flex-row gap-2 mb-6 border-3 border-[#560e51] shadow-[4px_4px_0px_0px_#560e51]">
-        {subTabs.map((tab) => {
-          const isSelected = activeSubTab === tab.id;
-          return (
-            <button
-              key={tab.id}
-              onClick={() => {
-                setActiveSubTab(tab.id as any);
-                sound.playClick();
-              }}
-              className={`lg:flex-1 py-2.5 px-3 rounded-xl text-xs font-black uppercase tracking-tight transition-all text-center cursor-pointer ${
-                isSelected 
-                  ? 'bg-[#78c222] text-[#560e51] border-2 border-[#560e51] shadow-[2px_2px_0px_0px_#560e51]' 
-                  : 'text-[#560e51] hover:bg-fuchsia-50 border-2 border-transparent'
-              }`}
-            >
-              {tab.label}
-            </button>
-          );
-        })}
+      {/* Sub Tabs */}
+      <div className="flex justify-center space-x-2 sm:space-x-3 overflow-x-auto pb-2 no-scrollbar">
+        <button
+          onClick={() => {
+            setActiveSubTab('someAny');
+            sound.playClick();
+          }}
+          className={`px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-black uppercase tracking-tight border-2 transition-all cursor-pointer whitespace-nowrap ${
+            activeSubTab === 'someAny'
+              ? 'bg-[#560e51] text-white border-[#560e51] shadow-[3px_3px_0px_0px_#78c222]'
+              : 'bg-white hover:bg-fuchsia-50 text-slate-700 border-slate-300'
+          }`}
+        >
+          1. Some & Any (4.1) 🥛
+        </button>
+
+        <button
+          onClick={() => {
+            setActiveSubTab('quantifiers');
+            sound.playClick();
+          }}
+          className={`px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-black uppercase tracking-tight border-2 transition-all cursor-pointer whitespace-nowrap ${
+            activeSubTab === 'quantifiers'
+              ? 'bg-[#560e51] text-white border-[#560e51] shadow-[3px_3px_0px_0px_#78c222]'
+              : 'bg-white hover:bg-fuchsia-50 text-slate-700 border-slate-300'
+          }`}
+        >
+          2. Quantifiers (4.2) 📊
+        </button>
+
+        <button
+          onClick={() => {
+            setActiveSubTab('passiveProcess');
+            sound.playClick();
+          }}
+          className={`px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-black uppercase tracking-tight border-2 transition-all cursor-pointer whitespace-nowrap ${
+            activeSubTab === 'passiveProcess'
+              ? 'bg-[#560e51] text-white border-[#560e51] shadow-[3px_3px_0px_0px_#78c222]'
+              : 'bg-white hover:bg-fuchsia-50 text-slate-700 border-slate-300'
+          }`}
+        >
+          3. Process Passive (is/are + V3) 🍫
+        </button>
+
+        <button
+          onClick={() => {
+            setActiveSubTab('connectives');
+            sound.playClick();
+          }}
+          className={`px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-black uppercase tracking-tight border-2 transition-all cursor-pointer whitespace-nowrap ${
+            activeSubTab === 'connectives'
+              ? 'bg-[#560e51] text-white border-[#560e51] shadow-[3px_3px_0px_0px_#78c222]'
+              : 'bg-white hover:bg-fuchsia-50 text-slate-700 border-slate-300'
+          }`}
+        >
+          4. Time Connectives (4.3) 🌱
+        </button>
       </div>
 
-      {/* --- SUBTAB CONTENT --- */}
-      <AnimatePresence mode="wait">
-        
-        {/* TAB 1: INFINITIVES OF PURPOSE */}
-        {activeSubTab === 'infinitives' && (
-          <motion.div
-            key="tab-infinitives"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            className="bg-white rounded-[28px] p-6 sm:p-8 border-4 border-[#560e51] shadow-[6px_6px_0px_0px_#560e51]"
-          >
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b-2 border-fuchsia-200 pb-3 mb-6 gap-2">
-              <div>
-                <span className="text-xs font-black text-[#9b2c98] uppercase tracking-widest font-mono">Lesson 3.2 & SAT Part 3A</span>
-                <h3 className="text-xl font-black text-[#560e51] mt-0.5 uppercase tracking-tight">Infinitives of Purpose: to + verb</h3>
-              </div>
-              <div className="bg-[#78c222] border-2 border-[#560e51] rounded-xl px-3.5 py-1 font-mono text-xs font-black text-[#560e51] shadow-[2px_2px_0px_0px_#560e51]">
-                <span>SCORE: {infScore} / {infCount}</span>
-              </div>
+      {/* SUB-TAB 1: SOME AND ANY */}
+      {activeSubTab === 'someAny' && (
+        <div className="bg-white rounded-[32px] p-6 sm:p-8 border-4 border-[#560e51] shadow-[8px_8px_0px_0px_#560e51] space-y-6">
+          <div className="border-b-2 border-fuchsia-100 pb-3 flex justify-between items-center">
+            <div>
+              <span className="text-xs font-mono font-black text-[#9b2c98] uppercase">
+                Language Detective · Some and Any Rule
+              </span>
+              <h3 className="text-xl sm:text-2xl font-black text-slate-950 uppercase mt-0.5">
+                Positive sentences (+) vs Negatives (-) & Questions (?)
+              </h3>
+            </div>
+            <span className="px-3 py-1 bg-lime-100 border border-lime-500 rounded-full text-xs font-black text-emerald-950 font-mono">
+              Score: {someAnyScore}/{someAnyCount}
+            </span>
+          </div>
+
+          {/* Quick Rule Cheat Sheet Card */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs font-sans">
+            <div className="p-3 bg-emerald-50 border-2 border-emerald-400 rounded-2xl space-y-1">
+              <span className="font-black text-emerald-900 uppercase block">Positive (+)</span>
+              <p className="font-bold text-emerald-800">Use <strong>SOME</strong></p>
+              <p className="text-[11px] text-emerald-700 italic">"There is some jam." / "There are some oranges."</p>
+            </div>
+            <div className="p-3 bg-rose-50 border-2 border-rose-400 rounded-2xl space-y-1">
+              <span className="font-black text-rose-900 uppercase block">Negative (-)</span>
+              <p className="font-bold text-rose-800">Use <strong>ANY</strong></p>
+              <p className="text-[11px] text-rose-700 italic">"There isn't any soup." / "There aren't any vegetables."</p>
+            </div>
+            <div className="p-3 bg-purple-50 border-2 border-purple-400 rounded-2xl space-y-1">
+              <span className="font-black text-purple-900 uppercase block">Questions (?)</span>
+              <p className="font-bold text-purple-800">Use <strong>ANY</strong></p>
+              <p className="text-[11px] text-purple-700 italic">"Is there any bread?" / "Are there any grapes?"</p>
+            </div>
+          </div>
+
+          {/* Drill Question Card */}
+          <div className="bg-[#fefaf0] border-3 border-[#560e51] rounded-2xl p-6 shadow-[4px_4px_0px_0px_#560e51] space-y-4">
+            <span className="text-xs font-mono font-black text-[#560e51] uppercase">
+              Question {someAnyIdx + 1} of {someAnyQuestions.length}
+            </span>
+
+            <p className="text-lg sm:text-xl font-black text-slate-950 leading-relaxed">
+              {someAnyQuestions[someAnyIdx].sentence}
+            </p>
+
+            <div className="grid grid-cols-2 gap-4 pt-2">
+              {someAnyQuestions[someAnyIdx].options.map((opt) => {
+                const isSelected = someAnySelected === opt;
+                const isCorrect = opt === someAnyQuestions[someAnyIdx].correct;
+                return (
+                  <button
+                    key={opt}
+                    onClick={() => handleAnswerSomeAny(opt)}
+                    disabled={!!someAnySelected}
+                    className={`py-4 px-6 rounded-2xl text-base sm:text-lg font-black uppercase font-mono border-3 transition-all cursor-pointer ${
+                      someAnySelected
+                        ? isCorrect
+                          ? 'bg-[#78c222] text-[#560e51] border-[#560e51] shadow-[3px_3px_0px_0px_#560e51]'
+                          : isSelected
+                          ? 'bg-rose-400 text-white border-[#560e51]'
+                          : 'bg-white opacity-50 border-slate-300'
+                        : 'bg-white hover:bg-fuchsia-50 text-[#560e51] border-[#560e51] shadow-[3px_3px_0px_0px_#560e51] active:translate-y-1 active:shadow-none'
+                    }`}
+                  >
+                    {opt}
+                  </button>
+                );
+              })}
             </div>
 
-            {/* Grammar rule reminder pill */}
-            <div className="mb-6 p-4 bg-fuchsia-50 border-2 border-[#560e51] rounded-2xl text-xs text-[#560e51] flex flex-col gap-1 shadow-[2px_2px_0px_0px_#560e51]">
-              <span className="font-black uppercase tracking-wider block font-mono text-[10px] text-[#9b2c98]">GRAMMAR KEY:</span>
-              <p className="font-semibold">
-                We use <strong>to + base verb</strong> to explain <strong>WHY</strong> an action is done (Action &rarr; Purpose).<br />
-                <em>Example:</em> "He put a large tub outside <strong>to collect</strong> rainwater." (Why? To collect water!)
-              </p>
-            </div>
-
-            {infCount < infinitiveQuestions.length ? (
-              <div>
-                <div className="bg-[#fdf2fe] border-2 border-[#560e51] rounded-2xl p-6 sm:p-8 mb-6 min-h-40 flex flex-col justify-between items-center text-center shadow-[2px_2px_0px_0px_#560e51]">
-                  <span className="p-1 px-3.5 bg-[#78c222] text-[#560e51] text-xs rounded-full font-black uppercase tracking-wider border-2 border-[#560e51]">
-                    Question {infIdx + 1} of {infinitiveQuestions.length}
-                  </span>
-                  <div className="my-4">
-                    <p className="text-lg sm:text-2xl font-black text-[#560e51] font-sans leading-relaxed">
-                      "{infinitiveQuestions[infIdx].action} <span className="underline decoration-4 decoration-[#78c222] text-[#9b2c98]">______</span> {infinitiveQuestions[infIdx].context}"
-                    </p>
-                    <span className="inline-block mt-2 px-3 py-1 bg-white border border-[#560e51] rounded-lg text-xs font-bold text-slate-700">
-                      Verb in brackets: ({infinitiveQuestions[infIdx].verb})
-                    </span>
-                  </div>
-                  <p className="text-xs text-[#9b2c98] bg-white py-1 px-3 border border-fuchsia-300 rounded-xl font-bold font-mono">
-                    💡 {infinitiveQuestions[infIdx].rule}
-                  </p>
+            {someAnySelected && (
+              <motion.div
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="space-y-3 pt-2"
+              >
+                <div className={`p-4 rounded-xl border-2 text-xs font-bold ${
+                  someAnySelected === someAnyQuestions[someAnyIdx].correct
+                    ? 'bg-emerald-50 border-emerald-500 text-emerald-950'
+                    : 'bg-rose-50 border-rose-500 text-rose-950'
+                }`}>
+                  <strong>{someAnySelected === someAnyQuestions[someAnyIdx].correct ? '🎉 Correct!' : '❌ Not quite!'}</strong>{' '}
+                  {someAnyQuestions[someAnyIdx].rule}
                 </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {infinitiveQuestions[infIdx].options.map((option) => {
-                    const isCorrect = infinitiveQuestions[infIdx].correct === option;
-                    const isSelected = infSelected === option;
-                    return (
-                      <button
-                        key={option}
-                        disabled={infSelected !== null}
-                        onClick={() => {
-                          setInfSelected(option);
-                          setInfCount(s => s + 1);
-                          if (isCorrect) {
-                            setInfScore(s => s + 1);
-                            sound.playCorrect();
-                            onUpdateAccuracy('infinitives', Math.round(((infScore + 1) / infinitiveQuestions.length) * 100));
-                          } else {
-                            sound.playWrong();
-                          }
-                        }}
-                        className={`p-5 rounded-2xl font-black cursor-pointer transition-all border-3 flex flex-col items-center gap-1 ${
-                          isSelected && isCorrect
-                            ? 'bg-[#78c222] border-[#560e51] text-[#560e51] shadow-[2px_2px_0px_0px_#560e51]'
-                            : isSelected && !isCorrect
-                            ? 'bg-rose-300 border-[#560e51] text-slate-950 shadow-[2px_2px_0px_0px_#560e51]'
-                            : 'bg-white hover:bg-fuchsia-50 border-[#560e51] text-[#560e51] shadow-[3px_3px_0px_0px_#560e51] active:translate-y-[2px]'
-                        }`}
-                      >
-                        <span className="text-xl uppercase tracking-wider font-black font-sans">{option}</span>
-                      </button>
-                    );
-                  })}
+                <div className="flex justify-end">
+                  <button
+                    onClick={nextSomeAny}
+                    className="px-6 py-2.5 bg-[#560e51] hover:bg-[#751b6f] text-white font-black text-xs uppercase rounded-xl border-2 border-[#560e51] shadow-[2px_2px_0px_0px_#78c222] cursor-pointer"
+                  >
+                    Next Question →
+                  </button>
                 </div>
-
-                {infSelected !== null && (
-                  <div className="mt-6 text-center animate-fade-in flex flex-col items-center">
-                    <p className="text-xs sm:text-sm font-black flex items-center justify-center gap-1.5 mb-3">
-                      {infSelected === infinitiveQuestions[infIdx].correct ? (
-                        <span className="text-emerald-700 bg-emerald-100 border-2 border-emerald-500 px-3 py-1 rounded-xl shadow-[2px_2px_0px_0px_#560e51]">
-                          🎉 Correct! "to + base verb" explains the exact purpose!
-                        </span>
-                      ) : (
-                        <span className="text-rose-700 bg-rose-100 border-2 border-rose-500 px-3 py-1 rounded-xl shadow-[2px_2px_0px_0px_#560e51]">
-                          ⚠️ Notice: Infinitive of purpose uses <strong>to + {infinitiveQuestions[infIdx].verb}</strong> &rarr; "{infinitiveQuestions[infIdx].correct}"
-                        </span>
-                      )}
-                    </p>
-                    <button
-                      onClick={() => {
-                        setInfSelected(null);
-                        setInfIdx(s => s + 1);
-                        sound.playClick();
-                      }}
-                      className="px-6 py-2.5 bg-[#78c222] hover:bg-[#68ab1c] border-2 border-[#560e51] text-[#560e51] font-black rounded-xl text-xs uppercase shadow-[2px_2px_0px_0px_#560e51] cursor-pointer"
-                    >
-                      Next Question &rarr;
-                    </button>
-                  </div>
-                )}
-              </div>
-            ) : (
-              <div className="text-center py-6">
-                <div className="inline-block p-4 rounded-2xl bg-[#78c222] text-[#560e51] border-3 border-[#560e51] shadow-[3px_3px_0px_0px_#560e51] mb-3 text-3xl">🏆</div>
-                <h4 className="text-2xl font-black text-[#560e51] uppercase">Infinitive Lab Complete!</h4>
-                <p className="text-slate-700 font-bold mt-1 text-sm">
-                  You scored {infScore} out of {infinitiveQuestions.length} ({Math.round((infScore / infinitiveQuestions.length) * 100)}%)!
-                </p>
-                <button
-                  onClick={() => {
-                    setInfIdx(0);
-                    setInfCount(0);
-                    setInfScore(0);
-                    setInfSelected(null);
-                    sound.playClick();
-                  }}
-                  className="mt-4 px-6 py-2 bg-[#78c222] border-2 border-[#560e51] font-black rounded-xl text-xs uppercase cursor-pointer text-[#560e51] shadow-[2px_2px_0px_0px_#560e51]"
-                >
-                  <RefreshCw className="inline h-3.5 w-3.5 mr-1" /> Retry Lab
-                </button>
-              </div>
+              </motion.div>
             )}
-          </motion.div>
-        )}
+          </div>
+        </div>
+      )}
 
-        {/* TAB 2: MODAL VERBS OF POSSIBILITY */}
-        {activeSubTab === 'modals' && (
-          <motion.div
-            key="tab-modals"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            className="bg-white rounded-[28px] p-6 sm:p-8 border-4 border-[#560e51] shadow-[6px_6px_0px_0px_#560e51]"
-          >
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b-2 border-fuchsia-200 pb-3 mb-6 gap-2">
-              <div>
-                <span className="text-xs font-black text-[#9b2c98] uppercase tracking-widest font-mono">Lesson 3.3 & SAT Part 3B</span>
-                <h3 className="text-xl font-black text-[#560e51] mt-0.5 uppercase tracking-tight">Modal Verbs of Possibility (Certainty Meter)</h3>
-              </div>
-              <div className="bg-[#78c222] border-2 border-[#560e51] rounded-xl px-3.5 py-1 font-mono text-xs font-black text-[#560e51] shadow-[2px_2px_0px_0px_#560e51]">
-                <span>SCORE: {modScore} / {modCount}</span>
-              </div>
+      {/* SUB-TAB 2: QUANTIFIERS */}
+      {activeSubTab === 'quantifiers' && (
+        <div className="bg-white rounded-[32px] p-6 sm:p-8 border-4 border-[#560e51] shadow-[8px_8px_0px_0px_#560e51] space-y-6">
+          <div className="border-b-2 border-fuchsia-100 pb-3 flex justify-between items-center">
+            <div>
+              <span className="text-xs font-mono font-black text-[#9b2c98] uppercase">
+                Countable vs Uncountable Quantifiers (4.2 & 4.3)
+              </span>
+              <h3 className="text-xl sm:text-2xl font-black text-slate-950 uppercase mt-0.5">
+                Many, Much, A Few, A Little, Plenty of
+              </h3>
+            </div>
+            <span className="px-3 py-1 bg-lime-100 border border-lime-500 rounded-full text-xs font-black text-emerald-950 font-mono">
+              Score: {quantScore}/{quantCount}
+            </span>
+          </div>
+
+          {/* Drill Question Card */}
+          <div className="bg-[#fefaf0] border-3 border-[#560e51] rounded-2xl p-6 shadow-[4px_4px_0px_0px_#560e51] space-y-4">
+            <span className="text-xs font-mono font-black text-[#560e51] uppercase">
+              Question {quantIdx + 1} of {quantifierQuestions.length}
+            </span>
+
+            <p className="text-lg sm:text-xl font-black text-slate-950 leading-relaxed">
+              {quantifierQuestions[quantIdx].sentence}
+            </p>
+
+            <div className="grid grid-cols-2 gap-4 pt-2">
+              {quantifierQuestions[quantIdx].options.map((opt) => {
+                const isSelected = quantSelected === opt;
+                const isCorrect = opt === quantifierQuestions[quantIdx].correct;
+                return (
+                  <button
+                    key={opt}
+                    onClick={() => handleAnswerQuant(opt)}
+                    disabled={!!quantSelected}
+                    className={`py-4 px-6 rounded-2xl text-base sm:text-lg font-black uppercase font-mono border-3 transition-all cursor-pointer ${
+                      quantSelected
+                        ? isCorrect
+                          ? 'bg-[#78c222] text-[#560e51] border-[#560e51] shadow-[3px_3px_0px_0px_#560e51]'
+                          : isSelected
+                          ? 'bg-rose-400 text-white border-[#560e51]'
+                          : 'bg-white opacity-50 border-slate-300'
+                        : 'bg-white hover:bg-fuchsia-50 text-[#560e51] border-[#560e51] shadow-[3px_3px_0px_0px_#560e51] active:translate-y-1 active:shadow-none'
+                    }`}
+                  >
+                    {opt}
+                  </button>
+                );
+              })}
             </div>
 
-            {/* Certainty Meter Graphic */}
-            <div className="mb-6 p-4 bg-indigo-50 border-2 border-[#560e51] rounded-2xl text-xs text-[#560e51] shadow-[2px_2px_0px_0px_#560e51]">
-              <span className="font-black uppercase tracking-wider block font-mono text-[10px] text-indigo-900 mb-2">POSSIBILITY SCALE (0% to 100%):</span>
-              <div className="grid grid-cols-3 gap-2 text-center font-bold">
-                <div className="bg-rose-100 border border-rose-300 p-2 rounded-xl">
-                  <span className="block font-black text-rose-800 text-sm">can't</span>
-                  <span className="text-[10px] text-rose-700">0% Impossible / Sure it is NOT true</span>
+            {quantSelected && (
+              <motion.div
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="space-y-3 pt-2"
+              >
+                <div className={`p-4 rounded-xl border-2 text-xs font-bold ${
+                  quantSelected === quantifierQuestions[quantIdx].correct
+                    ? 'bg-emerald-50 border-emerald-500 text-emerald-950'
+                    : 'bg-rose-50 border-rose-500 text-rose-950'
+                }`}>
+                  <strong>{quantSelected === quantifierQuestions[quantIdx].correct ? '🎉 Correct!' : '❌ Incorrect!'}</strong>{' '}
+                  {quantifierQuestions[quantIdx].rule}
                 </div>
-                <div className="bg-amber-100 border border-amber-300 p-2 rounded-xl">
-                  <span className="block font-black text-amber-800 text-sm">might / could</span>
-                  <span className="text-[10px] text-amber-700">~50% Maybe / Guessing</span>
+                <div className="flex justify-end">
+                  <button
+                    onClick={nextQuant}
+                    className="px-6 py-2.5 bg-[#560e51] hover:bg-[#751b6f] text-white font-black text-xs uppercase rounded-xl border-2 border-[#560e51] shadow-[2px_2px_0px_0px_#78c222] cursor-pointer"
+                  >
+                    Next Question →
+                  </button>
                 </div>
-                <div className="bg-emerald-100 border border-emerald-300 p-2 rounded-xl">
-                  <span className="block font-black text-emerald-800 text-sm">must</span>
-                  <span className="text-[10px] text-emerald-700">100% Certain / Clear Evidence</span>
-                </div>
-              </div>
-            </div>
-
-            {modCount < modalQuestions.length ? (
-              <div>
-                <div className="bg-[#fdf2fe] border-2 border-[#560e51] rounded-2xl p-6 sm:p-8 mb-6 min-h-40 flex flex-col justify-between items-center text-center shadow-[2px_2px_0px_0px_#560e51]">
-                  <span className="p-1 px-3.5 bg-[#78c222] text-[#560e51] text-xs rounded-full font-black uppercase tracking-wider border-2 border-[#560e51]">
-                    Question {modIdx + 1} of {modalQuestions.length}
-                  </span>
-                  <p className="text-lg sm:text-2xl font-black text-[#560e51] max-w-2xl font-sans mt-3 leading-relaxed">
-                    "{modalQuestions[modIdx].sentence}"
-                  </p>
-                  <p className="text-xs text-[#9b2c98] bg-white py-1 px-3 border border-fuchsia-300 rounded-xl font-bold mt-4 font-mono">
-                    💡 Target Certainty: {modalQuestions[modIdx].certainty}
-                  </p>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                  {modalQuestions[modIdx].options.map((option) => {
-                    const isCorrect = modalQuestions[modIdx].correct === option;
-                    const isSelected = modSelected === option;
-                    return (
-                      <button
-                        key={option}
-                        disabled={modSelected !== null}
-                        onClick={() => {
-                          setModSelected(option);
-                          setModCount(s => s + 1);
-                          if (isCorrect) {
-                            setModScore(s => s + 1);
-                            sound.playCorrect();
-                            onUpdateAccuracy('modals', Math.round(((modScore + 1) / modalQuestions.length) * 100));
-                          } else {
-                            sound.playWrong();
-                          }
-                        }}
-                        className={`p-5 rounded-2xl font-black cursor-pointer transition-all border-3 flex flex-col items-center gap-1 ${
-                          isSelected && isCorrect
-                            ? 'bg-[#78c222] border-[#560e51] text-[#560e51] shadow-[2px_2px_0px_0px_#560e51]'
-                            : isSelected && !isCorrect
-                            ? 'bg-rose-300 border-[#560e51] text-slate-950 shadow-[2px_2px_0px_0px_#560e51]'
-                            : 'bg-white hover:bg-fuchsia-50 border-[#560e51] text-[#560e51] shadow-[3px_3px_0px_0px_#560e51] active:translate-y-[2px]'
-                        }`}
-                      >
-                        <span className="text-xl uppercase tracking-wider font-black font-sans">{option}</span>
-                      </button>
-                    );
-                  })}
-                </div>
-
-                {modSelected !== null && (
-                  <div className="mt-6 text-center animate-fade-in flex flex-col items-center">
-                    <p className="text-xs sm:text-sm font-black flex items-center justify-center gap-1.5 mb-3">
-                      {modSelected === modalQuestions[modIdx].correct ? (
-                        <span className="text-emerald-700 bg-emerald-100 border-2 border-emerald-500 px-3 py-1 rounded-xl shadow-[2px_2px_0px_0px_#560e51]">
-                          🎉 Correct! {modalQuestions[modIdx].rule}
-                        </span>
-                      ) : (
-                        <span className="text-rose-700 bg-rose-100 border-2 border-rose-500 px-3 py-1 rounded-xl shadow-[2px_2px_0px_0px_#560e51]">
-                          ⚠️ {modalQuestions[modIdx].rule} &rarr; correct: <strong>{modalQuestions[modIdx].correct}</strong>
-                        </span>
-                      )}
-                    </p>
-                    <button
-                      onClick={() => {
-                        setModSelected(null);
-                        setModIdx(s => s + 1);
-                        sound.playClick();
-                      }}
-                      className="px-6 py-2.5 bg-[#78c222] hover:bg-[#68ab1c] border-2 border-[#560e51] text-[#560e51] font-black rounded-xl text-xs uppercase shadow-[2px_2px_0px_0px_#560e51] cursor-pointer"
-                    >
-                      Next Question &rarr;
-                    </button>
-                  </div>
-                )}
-              </div>
-            ) : (
-              <div className="text-center py-6">
-                <div className="inline-block p-4 rounded-2xl bg-[#78c222] text-[#560e51] border-3 border-[#560e51] shadow-[3px_3px_0px_0px_#560e51] mb-3 text-3xl">🏆</div>
-                <h4 className="text-2xl font-black text-[#560e51] uppercase">Modals Lab Mastered!</h4>
-                <p className="text-slate-700 font-bold mt-1 text-sm">
-                  You scored {modScore} out of {modalQuestions.length}!
-                </p>
-                <button
-                  onClick={() => {
-                    setModIdx(0);
-                    setModCount(0);
-                    setModScore(0);
-                    setModSelected(null);
-                    sound.playClick();
-                  }}
-                  className="mt-4 px-6 py-2 bg-[#78c222] border-2 border-[#560e51] font-black rounded-xl text-xs uppercase cursor-pointer text-[#560e51] shadow-[2px_2px_0px_0px_#560e51]"
-                >
-                  <RefreshCw className="inline h-3.5 w-3.5 mr-1" /> Retry Lab
-                </button>
-              </div>
+              </motion.div>
             )}
-          </motion.div>
-        )}
+          </div>
+        </div>
+      )}
 
-        {/* TAB 3: YES/NO QUESTIONS & RISING INTONATION */}
-        {activeSubTab === 'yesNoQuestions' && (
-          <motion.div
-            key="tab-questions"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            className="bg-white rounded-[28px] p-6 sm:p-8 border-4 border-[#560e51] shadow-[6px_6px_0px_0px_#560e51]"
-          >
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b-2 border-fuchsia-200 pb-3 mb-6 gap-2">
-              <div>
-                <span className="text-xs font-black text-[#9b2c98] uppercase tracking-widest font-mono">Lesson 3.3 Grammar & Speaking</span>
-                <h3 className="text-xl font-black text-[#560e51] mt-0.5 uppercase tracking-tight">Yes/No Questions & Rising Intonation (↑)</h3>
-              </div>
-              <div className="bg-[#78c222] border-2 border-[#560e51] rounded-xl px-3.5 py-1 font-mono text-xs font-black text-[#560e51] shadow-[2px_2px_0px_0px_#560e51]">
-                <span>SCORE: {qScore} / {qCount}</span>
-              </div>
+      {/* SUB-TAB 3: PROCESS PASSIVE */}
+      {activeSubTab === 'passiveProcess' && (
+        <div className="bg-white rounded-[32px] p-6 sm:p-8 border-4 border-[#560e51] shadow-[8px_8px_0px_0px_#560e51] space-y-6">
+          <div className="border-b-2 border-fuchsia-100 pb-3 flex justify-between items-center">
+            <div>
+              <span className="text-xs font-mono font-black text-[#9b2c98] uppercase">
+                Language Focus · Passive Voice for Processes (4.2)
+              </span>
+              <h3 className="text-xl sm:text-2xl font-black text-slate-950 uppercase mt-0.5">
+                is / are + Past Participle (From Bean to Bar)
+              </h3>
+            </div>
+            <span className="px-3 py-1 bg-lime-100 border border-lime-500 rounded-full text-xs font-black text-emerald-950 font-mono">
+              Score: {passiveScore}/{passiveCount}
+            </span>
+          </div>
+
+          {/* Drill Question Card */}
+          <div className="bg-[#fefaf0] border-3 border-[#560e51] rounded-2xl p-6 shadow-[4px_4px_0px_0px_#560e51] space-y-4">
+            <span className="text-xs font-mono font-black text-[#560e51] uppercase">
+              Question {passiveIdx + 1} of {passiveQuestions.length}
+            </span>
+
+            <p className="text-lg sm:text-xl font-black text-slate-950 leading-relaxed">
+              {passiveQuestions[passiveIdx].sentence}
+            </p>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+              {passiveQuestions[passiveIdx].options.map((opt) => {
+                const isSelected = passiveSelected === opt;
+                const isCorrect = opt === passiveQuestions[passiveIdx].correct;
+                return (
+                  <button
+                    key={opt}
+                    onClick={() => handleAnswerPassive(opt)}
+                    disabled={!!passiveSelected}
+                    className={`py-3.5 px-5 rounded-2xl text-sm sm:text-base font-black font-mono border-3 transition-all cursor-pointer text-left ${
+                      passiveSelected
+                        ? isCorrect
+                          ? 'bg-[#78c222] text-[#560e51] border-[#560e51] shadow-[2px_2px_0px_0px_#560e51]'
+                          : isSelected
+                          ? 'bg-rose-400 text-white border-[#560e51]'
+                          : 'bg-white opacity-50 border-slate-300'
+                        : 'bg-white hover:bg-fuchsia-50 text-[#560e51] border-[#560e51] shadow-[2px_2px_0px_0px_#560e51]'
+                    }`}
+                  >
+                    {opt}
+                  </button>
+                );
+              })}
             </div>
 
-            <div className="mb-6 p-4 bg-emerald-50 border-2 border-[#560e51] rounded-2xl text-xs text-[#560e51] shadow-[2px_2px_0px_0px_#560e51]">
-              <span className="font-black uppercase tracking-wider block font-mono text-[10px] text-emerald-900 mb-1">AUXILIARY VERBS + RISING TONE:</span>
-              <p className="font-semibold">
-                Yes/No questions start with auxiliary verbs (<strong>Is/Are</strong>, <strong>Do/Does</strong>, <strong>Have/Has</strong>, <strong>Could</strong>). In spoken English, your pitch goes <strong>UP at the end (↑)</strong>!
-              </p>
-            </div>
-
-            {qCount < questionExercises.length ? (
-              <div>
-                <div className="bg-[#fdf2fe] border-2 border-[#560e51] rounded-2xl p-6 sm:p-8 mb-6 min-h-40 flex flex-col justify-between items-center text-center shadow-[2px_2px_0px_0px_#560e51]">
-                  <span className="p-1 px-3.5 bg-[#78c222] text-[#560e51] text-xs rounded-full font-black uppercase tracking-wider border-2 border-[#560e51]">
-                    Question {qIdx + 1} of {questionExercises.length}
-                  </span>
-                  <p className="text-lg sm:text-2xl font-black text-[#560e51] max-w-2xl font-sans mt-3 leading-relaxed">
-                    {questionExercises[qIdx].prompt}
-                  </p>
-                  <p className="text-xs text-[#9b2c98] bg-white py-1 px-3 border border-fuchsia-300 rounded-xl font-bold mt-4 font-mono">
-                    💡 {questionExercises[qIdx].rule}
-                  </p>
+            {passiveSelected && (
+              <motion.div
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="space-y-3 pt-2"
+              >
+                <div className={`p-4 rounded-xl border-2 text-xs font-bold ${
+                  passiveSelected === passiveQuestions[passiveIdx].correct
+                    ? 'bg-emerald-50 border-emerald-500 text-emerald-950'
+                    : 'bg-rose-50 border-rose-500 text-rose-950'
+                }`}>
+                  <strong>{passiveSelected === passiveQuestions[passiveIdx].correct ? '🎉 Correct!' : '❌ Review rule!'}</strong>{' '}
+                  {passiveQuestions[passiveIdx].rule}
                 </div>
-
-                <div className="grid grid-cols-1 gap-3">
-                  {questionExercises[qIdx].options.map((option) => {
-                    const isCorrect = questionExercises[qIdx].correct === option;
-                    const isSelected = qSelected === option;
-                    return (
-                      <button
-                        key={option}
-                        disabled={qSelected !== null}
-                        onClick={() => {
-                          setQSelected(option);
-                          setQCount(s => s + 1);
-                          if (isCorrect) {
-                            setQScore(s => s + 1);
-                            sound.playCorrect();
-                            onUpdateAccuracy('questions', Math.round(((qScore + 1) / questionExercises.length) * 100));
-                          } else {
-                            sound.playWrong();
-                          }
-                        }}
-                        className={`p-4 rounded-2xl font-black cursor-pointer transition-all border-3 text-left ${
-                          isSelected && isCorrect
-                            ? 'bg-[#78c222] border-[#560e51] text-[#560e51] shadow-[2px_2px_0px_0px_#560e51]'
-                            : isSelected && !isCorrect
-                            ? 'bg-rose-300 border-[#560e51] text-slate-950 shadow-[2px_2px_0px_0px_#560e51]'
-                            : 'bg-white hover:bg-fuchsia-50 border-[#560e51] text-[#560e51] shadow-[3px_3px_0px_0px_#560e51] active:translate-y-[2px]'
-                        }`}
-                      >
-                        <span className="text-base sm:text-lg font-bold">{option}</span>
-                      </button>
-                    );
-                  })}
+                <div className="flex justify-end">
+                  <button
+                    onClick={nextPassive}
+                    className="px-6 py-2.5 bg-[#560e51] hover:bg-[#751b6f] text-white font-black text-xs uppercase rounded-xl border-2 border-[#560e51] shadow-[2px_2px_0px_0px_#78c222] cursor-pointer"
+                  >
+                    Next Process Step →
+                  </button>
                 </div>
-
-                {qSelected !== null && (
-                  <div className="mt-6 text-center animate-fade-in flex flex-col items-center">
-                    <p className="text-xs sm:text-sm font-black flex items-center justify-center gap-1.5 mb-3">
-                      {qSelected === questionExercises[qIdx].correct ? (
-                        <span className="text-emerald-700 bg-emerald-100 border-2 border-emerald-500 px-3 py-1 rounded-xl shadow-[2px_2px_0px_0px_#560e51]">
-                          🎉 Excellent! Rising intonation ↑ detected!
-                        </span>
-                      ) : (
-                        <span className="text-rose-700 bg-rose-100 border-2 border-rose-500 px-3 py-1 rounded-xl shadow-[2px_2px_0px_0px_#560e51]">
-                          ⚠️ Remember: {questionExercises[qIdx].rule}
-                        </span>
-                      )}
-                    </p>
-                    <button
-                      onClick={() => {
-                        setQSelected(null);
-                        setQIdx(s => s + 1);
-                        sound.playClick();
-                      }}
-                      className="px-6 py-2.5 bg-[#78c222] hover:bg-[#68ab1c] border-2 border-[#560e51] text-[#560e51] font-black rounded-xl text-xs uppercase shadow-[2px_2px_0px_0px_#560e51] cursor-pointer"
-                    >
-                      Next Question &rarr;
-                    </button>
-                  </div>
-                )}
-              </div>
-            ) : (
-              <div className="text-center py-6">
-                <div className="inline-block p-4 rounded-2xl bg-[#78c222] text-[#560e51] border-3 border-[#560e51] shadow-[3px_3px_0px_0px_#560e51] mb-3 text-3xl">🏆</div>
-                <h4 className="text-2xl font-black text-[#560e51] uppercase">Questions Mastered!</h4>
-                <p className="text-slate-700 font-bold mt-1 text-sm">
-                  You scored {qScore} out of {questionExercises.length}!
-                </p>
-                <button
-                  onClick={() => {
-                    setQIdx(0);
-                    setQCount(0);
-                    setQScore(0);
-                    setQSelected(null);
-                    sound.playClick();
-                  }}
-                  className="mt-4 px-6 py-2 bg-[#78c222] border-2 border-[#560e51] font-black rounded-xl text-xs uppercase cursor-pointer text-[#560e51] shadow-[2px_2px_0px_0px_#560e51]"
-                >
-                  <RefreshCw className="inline h-3.5 w-3.5 mr-1" /> Retry Lab
-                </button>
-              </div>
+              </motion.div>
             )}
-          </motion.div>
-        )}
+          </div>
+        </div>
+      )}
 
-        {/* TAB 4: FACT VS OPINION DETECTIVE */}
-        {activeSubTab === 'factOpinion' && (
-          <motion.div
-            key="tab-fact-opinion"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            className="bg-white rounded-[28px] p-6 sm:p-8 border-4 border-[#560e51] shadow-[6px_6px_0px_0px_#560e51]"
-          >
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b-2 border-fuchsia-200 pb-3 mb-6 gap-2">
-              <div>
-                <span className="text-xs font-black text-[#9b2c98] uppercase tracking-widest font-mono">Lesson 3.4 & SAT Part 4 Q6</span>
-                <h3 className="text-xl font-black text-[#560e51] mt-0.5 uppercase tracking-tight">Fact vs. Opinion Detective</h3>
-              </div>
-              <div className="bg-[#78c222] border-2 border-[#560e51] rounded-xl px-3.5 py-1 font-mono text-xs font-black text-[#560e51] shadow-[2px_2px_0px_0px_#560e51]">
-                <span>SCORE: {foScore} / {foCount}</span>
-              </div>
+      {/* SUB-TAB 4: TIME CONNECTIVES */}
+      {activeSubTab === 'connectives' && (
+        <div className="bg-white rounded-[32px] p-6 sm:p-8 border-4 border-[#560e51] shadow-[8px_8px_0px_0px_#560e51] space-y-6">
+          <div className="border-b-2 border-fuchsia-100 pb-3 flex justify-between items-center">
+            <div>
+              <span className="text-xs font-mono font-black text-[#9b2c98] uppercase">
+                Language Focus · Sequence Connectors (4.3)
+              </span>
+              <h3 className="text-xl sm:text-2xl font-black text-slate-950 uppercase mt-0.5">
+                Before, When, Then, After that, Finally
+              </h3>
+            </div>
+            <span className="px-3 py-1 bg-lime-100 border border-lime-500 rounded-full text-xs font-black text-emerald-950 font-mono">
+              Score: {connScore}/{connCount}
+            </span>
+          </div>
+
+          {/* Drill Question Card */}
+          <div className="bg-[#fefaf0] border-3 border-[#560e51] rounded-2xl p-6 shadow-[4px_4px_0px_0px_#560e51] space-y-4">
+            <span className="text-xs font-mono font-black text-[#560e51] uppercase">
+              Question {connIdx + 1} of {connectiveQuestions.length}
+            </span>
+
+            <p className="text-lg sm:text-xl font-black text-slate-950 leading-relaxed">
+              {connectiveQuestions[connIdx].sentence}
+            </p>
+
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2">
+              {connectiveQuestions[connIdx].options.map((opt) => {
+                const isSelected = connSelected === opt;
+                const isCorrect = opt === connectiveQuestions[connIdx].correct;
+                return (
+                  <button
+                    key={opt}
+                    onClick={() => handleAnswerConn(opt)}
+                    disabled={!!connSelected}
+                    className={`py-3.5 px-4 rounded-2xl text-sm sm:text-base font-black font-mono border-3 transition-all cursor-pointer ${
+                      connSelected
+                        ? isCorrect
+                          ? 'bg-[#78c222] text-[#560e51] border-[#560e51] shadow-[2px_2px_0px_0px_#560e51]'
+                          : isSelected
+                          ? 'bg-rose-400 text-white border-[#560e51]'
+                          : 'bg-white opacity-50 border-slate-300'
+                        : 'bg-white hover:bg-fuchsia-50 text-[#560e51] border-[#560e51] shadow-[2px_2px_0px_0px_#560e51]'
+                    }`}
+                  >
+                    {opt}
+                  </button>
+                );
+              })}
             </div>
 
-            <div className="mb-6 p-4 bg-amber-50 border-2 border-[#560e51] rounded-2xl text-xs text-[#560e51] shadow-[2px_2px_0px_0px_#560e51]">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div className="bg-white p-2.5 rounded-xl border border-amber-300">
-                  <span className="font-black uppercase text-amber-900 block text-xs">📖 FACT:</span>
-                  <span className="text-slate-700">Something that can be proven true with historical evidence, measurements, or dates (e.g. "built 2,000 years ago").</span>
+            {connSelected && (
+              <motion.div
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="space-y-3 pt-2"
+              >
+                <div className={`p-4 rounded-xl border-2 text-xs font-bold ${
+                  connSelected === connectiveQuestions[connIdx].correct
+                    ? 'bg-emerald-50 border-emerald-500 text-emerald-950'
+                    : 'bg-rose-50 border-rose-500 text-rose-950'
+                }`}>
+                  <strong>{connSelected === connectiveQuestions[connIdx].correct ? '🎉 Correct!' : '❌ Check connection!'}</strong>{' '}
+                  {connectiveQuestions[connIdx].rule}
                 </div>
-                <div className="bg-white p-2.5 rounded-xl border border-amber-300">
-                  <span className="font-black uppercase text-amber-900 block text-xs">💭 OPINION:</span>
-                  <span className="text-slate-700">What someone thinks or feels. Uses words like "in my opinion", "feels like", "spectacular", "loveliest".</span>
+                <div className="flex justify-end">
+                  <button
+                    onClick={nextConn}
+                    className="px-6 py-2.5 bg-[#560e51] hover:bg-[#751b6f] text-white font-black text-xs uppercase rounded-xl border-2 border-[#560e51] shadow-[2px_2px_0px_0px_#78c222] cursor-pointer"
+                  >
+                    Next Connector →
+                  </button>
                 </div>
-              </div>
-            </div>
-
-            {foCount < factOpinionItems.length ? (
-              <div>
-                <div className="bg-[#fdf2fe] border-2 border-[#560e51] rounded-2xl p-6 sm:p-8 mb-6 min-h-40 flex flex-col justify-between items-center text-center shadow-[2px_2px_0px_0px_#560e51]">
-                  <span className="p-1 px-3.5 bg-[#78c222] text-[#560e51] text-xs rounded-full font-black uppercase tracking-wider border-2 border-[#560e51]">
-                    Statement {foIdx + 1} of {factOpinionItems.length}
-                  </span>
-                  <p className="text-xl sm:text-2xl font-black text-[#560e51] italic max-w-2xl font-sans mt-4 leading-relaxed">
-                    "{factOpinionItems[foIdx].text}"
-                  </p>
-                  <p className="text-xs text-[#9b2c98] font-bold mt-4 font-mono">
-                    Is this statement a provable FACT or a personal OPINION?
-                  </p>
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  {['FACT', 'OPINION'].map((type) => {
-                    const isCorrect = factOpinionItems[foIdx].type === type;
-                    const isSelected = foSelected === type;
-                    return (
-                      <button
-                        key={type}
-                        disabled={foSelected !== null}
-                        onClick={() => {
-                          setFoSelected(type);
-                          setFoCount(s => s + 1);
-                          if (isCorrect) {
-                            setFoScore(s => s + 1);
-                            sound.playCorrect();
-                            onUpdateAccuracy('factOpinion', Math.round(((foScore + 1) / factOpinionItems.length) * 100));
-                          } else {
-                            sound.playWrong();
-                          }
-                        }}
-                        className={`p-6 rounded-2xl font-black cursor-pointer transition-all border-3 flex flex-col items-center gap-1 ${
-                          isSelected && isCorrect
-                            ? 'bg-[#78c222] border-[#560e51] text-[#560e51] shadow-[2px_2px_0px_0px_#560e51]'
-                            : isSelected && !isCorrect
-                            ? 'bg-rose-300 border-[#560e51] text-slate-950 shadow-[2px_2px_0px_0px_#560e51]'
-                            : 'bg-white hover:bg-fuchsia-50 border-[#560e51] text-[#560e51] shadow-[3px_3px_0px_0px_#560e51] active:translate-y-[2px]'
-                        }`}
-                      >
-                        <span className="text-2xl uppercase tracking-wider font-black font-sans">{type === 'FACT' ? '🔍 FACT' : '💭 OPINION'}</span>
-                      </button>
-                    );
-                  })}
-                </div>
-
-                {foSelected !== null && (
-                  <div className="mt-6 text-center animate-fade-in flex flex-col items-center">
-                    <p className="text-xs sm:text-sm font-black flex items-center justify-center gap-1.5 mb-3">
-                      {foSelected === factOpinionItems[foIdx].type ? (
-                        <span className="text-emerald-700 bg-emerald-100 border-2 border-emerald-500 px-3 py-1 rounded-xl shadow-[2px_2px_0px_0px_#560e51]">
-                          🎉 Correct Detective! {factOpinionItems[foIdx].reason}
-                        </span>
-                      ) : (
-                        <span className="text-rose-700 bg-rose-100 border-2 border-rose-500 px-3 py-1 rounded-xl shadow-[2px_2px_0px_0px_#560e51]">
-                          ⚠️ Incorrect. This is a <strong>{factOpinionItems[foIdx].type}</strong> because: {factOpinionItems[foIdx].reason}
-                        </span>
-                      )}
-                    </p>
-                    <button
-                      onClick={() => {
-                        setFoSelected(null);
-                        setFoIdx(s => s + 1);
-                        sound.playClick();
-                      }}
-                      className="px-6 py-2.5 bg-[#78c222] hover:bg-[#68ab1c] border-2 border-[#560e51] text-[#560e51] font-black rounded-xl text-xs uppercase shadow-[2px_2px_0px_0px_#560e51] cursor-pointer"
-                    >
-                      Next Statement &rarr;
-                    </button>
-                  </div>
-                )}
-              </div>
-            ) : (
-              <div className="text-center py-6">
-                <div className="inline-block p-4 rounded-2xl bg-[#78c222] text-[#560e51] border-3 border-[#560e51] shadow-[3px_3px_0px_0px_#560e51] mb-3 text-3xl">🏆</div>
-                <h4 className="text-2xl font-black text-[#560e51] uppercase">Detective Badge Earned!</h4>
-                <p className="text-slate-700 font-bold mt-1 text-sm">
-                  You correctly identified {foScore} out of {factOpinionItems.length} statements!
-                </p>
-                <button
-                  onClick={() => {
-                    setFoIdx(0);
-                    setFoCount(0);
-                    setFoScore(0);
-                    setFoSelected(null);
-                    sound.playClick();
-                  }}
-                  className="mt-4 px-6 py-2 bg-[#78c222] border-2 border-[#560e51] font-black rounded-xl text-xs uppercase cursor-pointer text-[#560e51] shadow-[2px_2px_0px_0px_#560e51]"
-                >
-                  <RefreshCw className="inline h-3.5 w-3.5 mr-1" /> Retry Detective Lab
-                </button>
-              </div>
+              </motion.div>
             )}
-          </motion.div>
-        )}
-
-      </AnimatePresence>
+          </div>
+        </div>
+      )}
 
     </div>
   );

@@ -37,6 +37,29 @@ class SoundSFX {
     }
   }
 
+  playPop() {
+    if (!this.enabled) return;
+    try {
+      const ctx = this.initCtx();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(800, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(1400, ctx.currentTime + 0.04);
+
+      gain.gain.setValueAtTime(0.08, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.04);
+
+      osc.start();
+      osc.stop(ctx.currentTime + 0.04);
+    } catch (e) {
+      console.warn('Audio play failed', e);
+    }
+  }
+
   playCorrect() {
     if (!this.enabled) return;
     try {

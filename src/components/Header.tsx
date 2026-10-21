@@ -56,13 +56,13 @@ export default function Header({
 
   const menuItems = [
     { id: 'dashboard', label: 'Dashboard 🏠', icon: GraduationCap },
-    { id: 'flashcards', label: 'Vocab & Homes 🏡', icon: BookOpen },
+    { id: 'flashcards', label: 'Food Vocab 🍳', icon: BookOpen },
     { id: 'grammar', label: 'Grammar Labs ⚙️', icon: CheckCircle },
-    { id: 'literature', label: 'Literature Study 📖', icon: Bookmark },
-    { id: 'dream-home', label: 'Dream Home 📐', icon: Award },
+    { id: 'literature', label: 'Charlie & Factory 🍫', icon: Bookmark },
+    { id: 'food-origin', label: 'Food Origin Lab 🍊', icon: Award },
     ...(isTeacherMode ? [{ id: 'spelling-bee', label: 'Spelling Bee 🐝', icon: Sparkles }] : []),
     { id: 'arcade', label: 'Classroom Games 🎮', icon: Play },
-    { id: 'mock-sat', label: 'Mock Assessment 📝', icon: Award }
+    { id: 'mock-sat', label: 'Unit 4 Exam 📝', icon: Award }
   ];
 
   const handleTabClick = (tabId: string) => {
@@ -82,10 +82,10 @@ export default function Header({
               <GraduationCap className="h-6 w-6 text-[#78c222] animate-pulse" />
             </div>
             <div>
-              <span className="text-xs font-black uppercase tracking-wider text-[#9b2c98] block leading-none font-mono">Unit 3 ESL Grade 4 · Homes (SDIT Auliya Semester 1)</span>
+              <span className="text-xs font-black uppercase tracking-wider text-[#9b2c98] block leading-none font-mono">Unit 4 ESL Grade 4 · Food (SDIT Auliya Semester 1)</span>
               <h1 className="text-lg md:text-2xl font-black font-sans tracking-tight text-slate-950 uppercase flex items-center gap-2 mt-1">
                 <span>English Review Terminal</span>
-                <span className="hidden sm:inline-block bg-[#78c222] text-[#560e51] text-xs font-black tracking-widest px-3 py-0.5 rounded-full border-2 border-[#560e51] shadow-[1.5px_1.5px_0px_0px_#560e51]">Unit 3: Homes</span>
+                <span className="hidden sm:inline-block bg-[#78c222] text-[#560e51] text-xs font-black tracking-widest px-3 py-0.5 rounded-full border-2 border-[#560e51] shadow-[1.5px_1.5px_0px_0px_#560e51]">Unit 4: Food</span>
               </h1>
             </div>
           </div>

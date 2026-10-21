@@ -1,11 +1,11 @@
 export type FlashcardCategory =
-  | 'types-of-homes'
-  | 'house-parts'
-  | 'adjectives'
-  | 'eco-house'
-  | 'strange-buildings'
-  | 'famous-places'
-  | 'hobbit-words';
+  | 'breakfast-foods'
+  | 'how-food-grows'
+  | 'chocolate-process'
+  | 'gardening-plants'
+  | 'sensory-adjectives'
+  | 'charlie-chocolate'
+  | 'quantifiers-food';
 
 export interface Flashcard {
   id: string;
@@ -13,23 +13,31 @@ export interface Flashcard {
   translation: string;
   category: FlashcardCategory;
   example: string;
-  lesson: '3.1' | '3.2' | '3.3' | '3.4' | '3.5' | '3.6';
+  lesson: '4.1' | '4.2' | '4.3' | '4.4' | '4.5' | '4.6';
   funFact?: string;
   imageUrl?: string;
 }
 
 export interface MatchPair {
   id: string;
-  sentence: string;
-  purpose: string;
-  verb: string;
+  food: string;
+  growthLocation: string; // e.g. "on a tree", "on a plant", "in the ground", "on the ground"
+  type: string;
+}
+
+export interface ProcessStep {
+  id: string;
+  stepNumber: number;
+  action: string;
+  connector: string;
+  details: string;
 }
 
 export interface RhymePair {
   id: string;
   word1: string;
   word2: string;
-  verse: number;
+  verse?: number;
 }
 
 export type QuestionCategory = 
@@ -50,10 +58,12 @@ export interface SATQuestion {
   correctAnswer: string | boolean; // Option text, word, or true/false
   explanation: string;
   hint: string;
-  matchLetter?: string; // For Part 2 matching letter A-K
-  adjective?: string; // For Part 2 adjective word (e.g. famous, colourful)
+  matchLetter?: string; // For Part 2 matching letter A-F
+  adjective?: string; // For sensory adjectives
   anagramLetters?: string[]; // For word anagram cards
-  blankWordOptions?: string[]; // For Part 1 fill in the blanks
+  blankWordOptions?: string[]; // For fill in the blanks
+  audioPrompt?: string; // Text spoken for listening
+  stepOrderNumber?: number; // For Part 1 sequence steps (2-6)
 }
 
 export interface StudentProgress {
@@ -71,32 +81,46 @@ export interface ClassroomScores {
   teamB: number;
 }
 
-export interface DreamHomeProjectData {
-  homeName: string;
-  homeType: string;
-  style: string;
-  location: string;
-  materials: string[];
-  adjectives: string[];
-  specialFeatures: string[];
-  rooms: {
-    bedrooms: number;
-    bathrooms: number;
-    functionalRooms: string[];
+export interface FoodProjectData {
+  foodName: string;
+  foodType: string; // e.g. 'Fresh Fruit Drink', 'Chocolate Snack', 'Sprout Salad', 'Breakfast Pastry'
+  originCountry: string;
+  climateNeeded: string;
+  growthType: string; // 'On a tree', 'On a plant', 'In the ground', 'Without soil'
+  ingredients: string[];
+  sensoryAdjectives: {
+    sight: string;
+    touch: string;
+    smell: string;
+    taste: string;
+    sound: string;
   };
-  landWidth: number;
-  landLength: number;
-  visitorImpression: string;
-  whyLove: string;
+  processSteps: {
+    step1: string;
+    step2: string;
+    step3: string;
+    step4: string;
+  };
+  packagingDescription: string;
+  healthFunFact: string;
+  whyILoveIt: string;
 }
 
 // Backward compatibility alias during transition
-export type ShuttleProjectData = DreamHomeProjectData;
+export type DreamHomeProjectData = FoodProjectData;
+export type ShuttleProjectData = FoodProjectData;
 
 // =============================================================================
 // SPELLING BEE CONTEST TYPES
 // =============================================================================
-export type SpellingTopic = 'Homes & Buildings' | 'Descriptive Adjectives' | 'Eco & Materials' | 'Famous Places & Hobbit' | 'Custom';
+export type SpellingTopic = 
+  | 'Breakfast & Food' 
+  | 'Sensory Adjectives' 
+  | 'Chocolate & Science' 
+  | 'Gardening & Growth' 
+  | 'Charlie & Factory' 
+  | 'Custom';
+
 export type SpellingDifficulty = 'Easy' | 'Medium' | 'Hard' | 'Championship';
 
 export interface SpellingWord {
@@ -116,8 +140,8 @@ export interface AuditionCandidate {
   id: string;
   name: string;
   classroom: string;
-  score: number; // Written score
-  totalTested: number; // Total written words (e.g., 10 or 16)
+  score: number;
+  totalTested: number;
   status: 'pending' | 'qualified' | 'eliminated';
   notes?: string;
   wordsHistory?: {
@@ -132,7 +156,7 @@ export interface Finalist {
   name: string;
   classroom: string;
   score: number;
-  strikes: number; // Max strikes before elimination
+  strikes: number;
   isEliminated: boolean;
   stageRank?: number;
   wordsHistory: {
@@ -140,4 +164,3 @@ export interface Finalist {
     isCorrect: boolean;
   }[];
 }
-
